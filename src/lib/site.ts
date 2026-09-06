@@ -3,6 +3,8 @@
  * Tudo que muda com o tempo (contatos, links, URL de produção) vive aqui.
  */
 
+import { PUBLIC_ENV } from "@/lib/env";
+
 const WHATSAPP_NUMBER = "5568992380529"; // formato internacional, só dígitos
 const WHATSAPP_MESSAGE =
   "Olá! Vim pelo site da Versa e quero falar sobre um projeto.";
@@ -10,8 +12,12 @@ const WHATSAPP_MESSAGE =
 export const SITE = {
   name: "Versa",
   legalName: "Versa — Tecnologia, Design e Performance",
-  /** Trocar pelo domínio final antes do deploy. Usado em SEO, sitemap e OG. */
-  url: "https://versa.com.br",
+  /**
+   * Vem de NEXT_PUBLIC_SITE_URL. Em desenvolvimento cai em localhost.
+   * Alimenta SEO, canonical, sitemap, robots e Open Graph, então precisa
+   * ser o domínio real em produção e não pode ser esquecido no deploy.
+   */
+  url: PUBLIC_ENV.siteUrl,
   locale: "pt-BR",
   tagline: "Tecnologia, design e mídia paga sob o mesmo teto.",
   description:
@@ -33,16 +39,27 @@ export const SITE = {
   },
 
   nav: [
-    { label: "Serviços", href: "#servicos" },
-    { label: "Método", href: "#processo" },
-    { label: "Trabalhos", href: "#trabalhos" },
-    { label: "Tecnologia", href: "#tecnologia" },
-    { label: "Dúvidas", href: "#faq" },
+    { label: "Serviços", href: "/#servicos" },
+    { label: "Trabalhos", href: "/#trabalhos" },
+    { label: "Investimento", href: "/#investimento" },
+    { label: "Método", href: "/#processo" },
+    { label: "Dúvidas", href: "/#faq" },
   ],
 } as const;
 
+/**
+ * Textos de CTA.
+ *
+ * A regra que vale para todos: um CTA precisa responder "o que eu recebo se
+ * clicar?". "Falar com a Versa" respondia "uma conversa de vendas", que é o
+ * compromisso mais caro possível oferecido no momento de menor confiança.
+ */
 export const CTA = {
-  primary: "Falar com a Versa",
-  primaryShort: "Falar no WhatsApp",
+  primary: "Rodar o diagnóstico gratuito",
+  primaryShort: "Diagnóstico gratuito",
   secondary: "Ver trabalhos",
+  whatsapp: "Falar no WhatsApp",
 } as const;
+
+/** Destino do CTA principal do site. Um lugar só para trocar depois. */
+export const DIAGNOSTICO_HREF = "/diagnostico";

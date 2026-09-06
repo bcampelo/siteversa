@@ -20,7 +20,7 @@ export function Manifesto() {
   return (
     <section
       id="manifesto"
-      className="relative scroll-mt-24 py-24 sm:py-32 lg:py-40"
+      className="relative scroll-mt-24 overflow-hidden py-24 sm:py-32 lg:py-40"
     >
       <div
         aria-hidden

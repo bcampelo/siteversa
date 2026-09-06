@@ -432,17 +432,22 @@
 
    Linha do tempo (quando a intro roda):
      0 ms      marca começa a se montar peça por peça
-     380 ms    letras do logotipo entram em cascata
-     1300 ms   cortina começa a subir; marca recua para o canto
-     1360 ms   headline do hero começa a subir por trás da cortina
-     2100 ms   cortina fora da tela
+     200 ms    letras do logotipo entram em cascata
+     700 ms    cortina começa a subir; marca recua para o canto
+     740 ms    headline do hero começa a subir por trás da cortina
+     1150 ms   cortina fora da tela
+
+   A linha do tempo foi comprimida de 2100 ms para 1150 ms. O gesto de marca
+   continua inteiro, só que executado no ritmo de quem tem pressa. Intro é
+   despesa de atenção: cabe na visita direta, não cabe na visita paga, e por
+   isso o script do layout também a desliga quando a URL traz UTM.
    ========================================================================= */
 
 :root {
   --intro-offset: 0ms;
 }
 html[data-intro="1"] {
-  --intro-offset: 1360ms;
+  --intro-offset: 740ms;
   /* trava o scroll durante a intro; liberado por [data-intro-done] */
   overflow: hidden;
 }
@@ -456,7 +461,7 @@ html[data-intro="1"][data-intro-done] {
 }
 html[data-intro="1"] .preloader {
   display: flex;
-  animation: curtain-up 800ms var(--ease-in-out-soft) 1300ms forwards;
+  animation: curtain-up 450ms var(--ease-in-out-soft) 700ms forwards;
 }
 html[data-intro="1"][data-intro-done] .preloader {
   visibility: hidden;
@@ -472,7 +477,7 @@ html[data-intro="1"][data-intro-done] .preloader {
 
 /* A marca recua para o canto superior esquerdo — o lugar dela no cabeçalho */
 html[data-intro="1"] .preloader-mark {
-  animation: mark-exit 780ms var(--ease-versa) 1280ms forwards;
+  animation: mark-exit 440ms var(--ease-versa) 690ms forwards;
 }
 @keyframes mark-exit {
   to {
@@ -482,7 +487,7 @@ html[data-intro="1"] .preloader-mark {
 }
 
 html[data-intro="1"] .preloader-fade {
-  animation: preloader-fade 320ms var(--ease-versa) 1240ms forwards;
+  animation: preloader-fade 200ms var(--ease-versa) 660ms forwards;
 }
 @keyframes preloader-fade {
   to {
@@ -492,7 +497,7 @@ html[data-intro="1"] .preloader-fade {
 }
 
 html[data-intro="1"] .preloader-bar {
-  animation: preloader-bar 1240ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation: preloader-bar 660ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 @keyframes preloader-bar {
   from {
@@ -554,7 +559,7 @@ html[data-intro="1"] .preloader-bar {
 .versa-mark--intro .versa-crown-r,
 .versa-mark--intro .versa-wing-l,
 .versa-mark--intro .versa-wing-r {
-  animation-duration: 900ms;
+  animation-duration: 520ms;
   animation-timing-function: var(--ease-versa);
   animation-fill-mode: both;
 }
@@ -567,19 +572,19 @@ html[data-intro="1"] .preloader-bar {
 }
 .versa-mark--intro .versa-crown-l {
   animation-name: mark-crown-l;
-  animation-delay: 140ms;
+  animation-delay: 80ms;
 }
 .versa-mark--intro .versa-crown-r {
   animation-name: mark-crown-r;
-  animation-delay: 140ms;
+  animation-delay: 80ms;
 }
 .versa-mark--intro .versa-wing-l {
   animation-name: mark-wing;
-  animation-delay: 260ms;
+  animation-delay: 150ms;
 }
 .versa-mark--intro .versa-wing-r {
   animation-name: mark-wing;
-  animation-delay: 330ms;
+  animation-delay: 190ms;
 }
 
 @keyframes mark-base-l {
@@ -694,22 +699,22 @@ html[data-intro="1"] .preloader-bar {
 /* Tempos casados com MIN_MS do preloader: as cinco letras terminam de
    entrar pouco antes da cortina começar a subir. */
 .versa-wordmark--intro .versa-letter {
-  animation: letter-in 700ms var(--ease-versa) both;
+  animation: letter-in 400ms var(--ease-versa) both;
 }
 .versa-wordmark--intro .versa-letter:nth-child(1) {
-  animation-delay: 380ms;
+  animation-delay: 200ms;
 }
 .versa-wordmark--intro .versa-letter:nth-child(2) {
-  animation-delay: 425ms;
+  animation-delay: 232ms;
 }
 .versa-wordmark--intro .versa-letter:nth-child(3) {
-  animation-delay: 470ms;
+  animation-delay: 264ms;
 }
 .versa-wordmark--intro .versa-letter:nth-child(4) {
-  animation-delay: 515ms;
+  animation-delay: 296ms;
 }
 .versa-wordmark--intro .versa-letter:nth-child(5) {
-  animation-delay: 560ms;
+  animation-delay: 328ms;
 }
 @keyframes letter-in {
   from {
@@ -740,5 +745,54 @@ html[data-intro="1"] .preloader-bar {
   }
   .grain {
     display: none;
+  }
+}
+
+/* =========================================================================
+   Controle deslizante das ferramentas
+   -------------------------------------------------------------------------
+   O controle nativo é a peça de interface mais feia que existe em todo
+   navegador, e cada um desenha o seu de um jeito. Como as ferramentas são a
+   demonstração pública da capacidade da Versa, ele precisa parecer nosso.
+   ========================================================================= */
+.range-versa {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  width: 100%;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-chalk) 12%, transparent);
+  outline: none;
+  cursor: pointer;
+}
+.range-versa::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 1.15rem;
+  width: 1.15rem;
+  border-radius: 999px;
+  background: var(--color-chalk);
+  border: 3px solid var(--color-ink-2);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-brand-soft) 55%, transparent);
+  transition: transform 220ms var(--ease-versa);
+}
+.range-versa::-webkit-slider-thumb:hover {
+  transform: scale(1.12);
+}
+.range-versa::-moz-range-thumb {
+  height: 1.15rem;
+  width: 1.15rem;
+  border-radius: 999px;
+  background: var(--color-chalk);
+  border: 3px solid var(--color-ink-2);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-brand-soft) 55%, transparent);
+}
+.range-versa:focus-visible {
+  outline: 2px solid var(--color-brand-soft);
+  outline-offset: 6px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .range-versa::-webkit-slider-thumb {
+    transition: none;
   }
 }

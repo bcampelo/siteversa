@@ -58,7 +58,7 @@ export function Process() {
 
   const heading = (
     <SectionHeading
-      index="04"
+      index="07"
       eyebrow="Nosso método"
       title={
         <>
@@ -88,7 +88,16 @@ export function Process() {
     <section id="processo" className="relative scroll-mt-24">
       <div
         ref={sectionRef}
-        style={{ height: `${100 + PROCESS.length * 55}vh` }}
+        /*
+          158vh no lugar dos 320vh anteriores.
+
+          A rolagem horizontal continua inteira, só que mapeada para menos
+          rolagem vertical. Antes o visitante precisava atravessar mais de
+          três telas de método para chegar em Trabalhos, que é a prova, ou
+          seja, o trecho mais longo do site ficava exatamente na frente do
+          argumento mais forte dele.
+        */
+        style={{ height: `${70 + PROCESS.length * 22}vh` }}
         className="relative"
       >
         {/* O título permanece na tela enquanto as etapas correm: o visitante

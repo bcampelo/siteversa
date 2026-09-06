@@ -2,12 +2,14 @@ import { VersaMark } from "@/components/brand/VersaMark";
 import { Eyebrow } from "@/components/layout/SectionHeading";
 import { ArrowIcon, Button, WhatsAppIcon } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
-import { SITE } from "@/lib/site";
+import { TrackedLink } from "@/components/ui/TrackedLink";
+import { SITE, DIAGNOSTICO_HREF } from "@/lib/site";
+import { whatsappUrl } from "@/lib/whatsapp";
 
 const REASSURANCE = [
-  { label: "Primeira conversa", value: "Gratuita e sem script" },
+  { label: "Diagnóstico", value: "Grátis, em 2 minutos" },
   { label: "Retorno", value: "Em até 24h úteis" },
-  { label: "Proposta", value: "Escopo e prazo fechados" },
+  { label: "Proposta", value: "Escopo, prazo e preço fechados" },
 ];
 
 export function FinalCta() {
@@ -28,41 +30,66 @@ export function FinalCta() {
       <div className="shell relative">
         <div className="flex flex-col items-center text-center">
           <Reveal y={16} blur={false}>
-            <Eyebrow index="08">Próximo passo</Eyebrow>
+            <Eyebrow index="11">Próximo passo</Eyebrow>
           </Reveal>
 
           <Reveal delay={0.06}>
-            <h2 className="text-hero mt-8 max-w-[20ch] text-balance">
-              A próxima fase da sua marca começa com{" "}
+            <h2 className="text-hero mt-8 max-w-[22ch] text-balance">
+              Você não precisa contratar nada para{" "}
               <span className="font-editorial italic font-normal text-gradient">
-                uma conversa.
+                descobrir o que está travando.
               </span>
             </h2>
           </Reveal>
 
           <Reveal delay={0.14}>
             <p className="text-lede mx-auto mt-8 max-w-[52ch] text-fog">
-              Sem compromisso e sem script de vendas. Você conta o cenário, a
-              gente diz o que faria — e se somos, ou não, a escolha certa para
-              o seu momento.
+              Seis perguntas, dois minutos, e a nossa leitura do seu caso. Se
+              a resposta for que você ainda não deveria contratar ninguém, é
+              isso que a gente vai dizer.
             </p>
           </Reveal>
 
           <Reveal delay={0.2}>
+            {/*
+              Dois níveis de compromisso, não dois canais para o mesmo
+              compromisso. Antes o rodapé oferecia WhatsApp e e-mail, que
+              custam a mesma coisa para quem está decidindo.
+            */}
             <div className="mt-11 flex flex-col items-center gap-3 sm:flex-row">
-              <Button href={SITE.contact.whatsapp} external size="lg">
-                <WhatsAppIcon />
-                Chamar no WhatsApp
+              <Button
+                href={DIAGNOSTICO_HREF}
+                size="lg"
+                section="cta-final"
+                ctaLabel="Quero uma análise do meu caso"
+              >
+                Quero uma análise do meu caso
                 <ArrowIcon />
               </Button>
               <Button
-                href={`mailto:${SITE.contact.email}?subject=Projeto%20com%20a%20Versa`}
+                href={whatsappUrl("cta-final")}
+                external
                 variant="ghost"
                 size="lg"
+                section="cta-final"
+                ctaLabel="WhatsApp"
               >
-                Enviar um e-mail
+                <WhatsAppIcon />
+                Falar agora no WhatsApp
               </Button>
             </div>
+
+            <p className="mt-6 text-[0.8125rem] text-fog-dim">
+              Prefere e-mail?{" "}
+              <TrackedLink
+                href={`mailto:${SITE.contact.email}?subject=Projeto%20com%20a%20Versa`}
+                section="cta-final"
+                ctaLabel="E-mail"
+                className="link-underline text-chalk"
+              >
+                {SITE.contact.email}
+              </TrackedLink>
+            </p>
           </Reveal>
 
           <Reveal delay={0.28}>

@@ -4,17 +4,27 @@ import { motion, useReducedMotion, useScroll, useTransform } from "motion/react"
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { ArrowIcon, Button, WhatsAppIcon } from "@/components/ui/Button";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { SERVICES } from "@/lib/content";
-import { CTA, SITE } from "@/lib/site";
+import { CTA, DIAGNOSTICO_HREF } from "@/lib/site";
+import { whatsappUrl } from "@/lib/whatsapp";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 
 // A cena 3D nunca bloqueia o conteúdo: entra depois, só no cliente.
 const HeroCanvas = dynamic(() => import("./HeroCanvas"), { ssr: false });
 
+/**
+ * Selos do hero.
+ *
+ * Antes o primeiro selo dizia "Diagnóstico gratuito" e o site não tinha
+ * diagnóstico nenhum. Promessa sem entrega é pior do que promessa nenhuma,
+ * porque cria expectativa de ferramenta e devolve formulário de WhatsApp.
+ * Agora o selo descreve a coisa que existe, e o botão ao lado leva a ela.
+ */
 const TRUST = [
-  "Diagnóstico gratuito",
-  "Resposta em até 24h",
-  "Zero template pronto",
+  "2 minutos, sem cadastro",
+  "Resposta em até 24h úteis",
+  "Código e acessos são seus",
 ];
 
 /**
@@ -139,26 +149,60 @@ export function Hero() {
             className="hero-fade text-lede mt-8 max-w-[46ch] text-fog"
             style={{ "--d": "520ms" } as React.CSSProperties}
           >
-            A Versa é uma empresa de tecnologia. Unimos{" "}
-            <span className="text-chalk">design</span>,{" "}
-            <span className="text-chalk">engenharia</span> e{" "}
-            <span className="text-chalk">mídia paga</span> para transformar
-            presença digital em crescimento real — não em curtida.
+            Somos uma empresa de tecnologia. Desenhamos a{" "}
+            <span className="text-chalk">marca</span>, escrevemos o{" "}
+            <span className="text-chalk">código</span> e operamos a{" "}
+            <span className="text-chalk">mídia</span>. Um time só, uma conta só,
+            um número no fim do mês.
           </p>
 
           <div
             className="hero-fade mt-10 flex flex-col gap-3 sm:flex-row sm:items-center"
             style={{ "--d": "640ms" } as React.CSSProperties}
           >
-            <Button href={SITE.contact.whatsapp} external size="lg">
-              <WhatsAppIcon />
+            {/*
+              O CTA principal deixou de pedir uma conversa e passou a entregar
+              alguma coisa. Um botão que diz "falar com a empresa" cobra o
+              compromisso mais caro possível no momento de menor confiança:
+              logo na chegada, de quem ainda não sabe quem somos.
+            */}
+            <Button
+              href={DIAGNOSTICO_HREF}
+              size="lg"
+              section="hero"
+              ctaLabel={CTA.primary}
+            >
               {CTA.primary}
               <ArrowIcon />
             </Button>
-            <Button href="#trabalhos" variant="ghost" size="lg">
+            <Button
+              href="#trabalhos"
+              variant="ghost"
+              size="lg"
+              section="hero"
+              ctaLabel={CTA.secondary}
+            >
               {CTA.secondary}
             </Button>
           </div>
+
+          <p
+            className="hero-fade mt-5 text-[0.8125rem] text-fog-dim"
+            style={{ "--d": "700ms" } as React.CSSProperties}
+          >
+            Prefere ir direto ao ponto?{" "}
+            <TrackedLink
+              href={whatsappUrl("hero")}
+              section="hero"
+              ctaLabel="WhatsApp direto"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-underline inline-flex items-center gap-1.5 text-chalk"
+            >
+              <WhatsAppIcon className="size-[0.95em]" />
+              Chame no WhatsApp
+            </TrackedLink>
+          </p>
 
           <ul
             className="hero-fade mt-9 flex flex-wrap items-center gap-x-6 gap-y-2"

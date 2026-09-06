@@ -2,12 +2,18 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
+import { Analytics } from "@/components/analytics/Analytics";
+import { ConsentBanner } from "@/components/analytics/ConsentBanner";
+import { ConsentDefaultScript } from "@/components/analytics/ConsentDefaultScript";
+import { WebVitals } from "@/components/analytics/WebVitals";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { Preloader } from "@/components/layout/Preloader";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
+import { StickyCta } from "@/components/layout/StickyCta";
 import { MotionProvider } from "@/components/providers/MotionProvider";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
+import { FAQ } from "@/lib/content";
 import { SITE } from "@/lib/site";
 
 /* -------------------------------------------------------------------------
@@ -156,6 +162,23 @@ const jsonLd = {
   },
 };
 
+/**
+ * FAQPage.
+ *
+ * As seis perguntas já existiam no site e não estavam marcadas. Marcar é de
+ * graça e habilita o resultado expandido na busca, que ocupa mais espaço na
+ * tela do que o link comum do concorrente.
+ */
+const faqLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -169,19 +192,23 @@ export default function RootLayout({
       className={`${interTight.variable} ${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
     >
       <head>
+        <ConsentDefaultScript />
         {/*
           Decide antes da primeira pintura se a intro de marca vai rodar, e
           marca a decisão no <html>. O CSS do hero lê esse atributo para
           sincronizar (ou zerar) o atraso da revelação, e o Preloader lê o
           mesmo atributo para saber se deve se montar.
 
-          Regras: só em desktop (no celular a intro custaria o que mais
-          importa — velocidade), nunca em `prefers-reduced-motion`, e uma vez
-          só por sessão.
+          Regras: só na home, só em desktop (no celular a intro custaria o
+          que mais importa, velocidade), nunca em `prefers-reduced-motion`,
+          uma vez só por sessão e NUNCA em visita que chegou por link de
+          campanha. Visita paga não paga intro: quem clicou num anúncio veio
+          buscar uma resposta, e cada décimo de segundo antes dela é verba
+          queimada. A duração caiu de 2,15s para 1,15s pelo mesmo motivo.
         */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var d=document.documentElement;if(!window.matchMedia("(min-width:1024px)").matches)return;if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;if(sessionStorage.getItem("versa:intro")==="1")return;sessionStorage.setItem("versa:intro","1");d.setAttribute("data-intro","1");setTimeout(function(){d.setAttribute("data-intro-done","")},2150)}catch(e){}})();`,
+            __html: `(function(){try{var d=document.documentElement;if(location.pathname!=="/")return;if(!window.matchMedia("(min-width:1024px)").matches)return;if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;var q=location.search;if(/utm_|gclid|fbclid/.test(q))return;if(sessionStorage.getItem("versa:intro")==="1")return;sessionStorage.setItem("versa:intro","1");d.setAttribute("data-intro","1");setTimeout(function(){d.setAttribute("data-intro-done","")},1150)}catch(e){}})();`,
           }}
         />
       </head>
@@ -189,6 +216,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
         />
 
         <MotionProvider>
@@ -206,7 +237,12 @@ export default function RootLayout({
           <Header />
           <main id="conteudo">{children}</main>
           <Footer />
+          <StickyCta />
         </MotionProvider>
+
+        <Analytics />
+        <WebVitals />
+        <ConsentBanner />
 
         <div className="grain" aria-hidden />
       </body>

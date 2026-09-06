@@ -21,7 +21,7 @@ export function Differentials() {
     <section id="diferenciais" className="relative scroll-mt-24 py-24 sm:py-32">
       <div className="shell">
         <SectionHeading
-          index="03"
+          index="06"
           eyebrow="Por que a Versa"
           title={
             <>

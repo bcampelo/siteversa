@@ -200,7 +200,11 @@ export type CaseStudy = {
   client: string;
   sector: string;
   year: string;
-  category: "Sites & Landing Pages" | "Design Gráfico" | "Social & Motion";
+  category:
+    | "Tráfego e Performance"
+    | "Sites & Landing Pages"
+    | "Design Gráfico"
+    | "Social & Motion";
   headline: string;
   summary: string;
   scope: string[];
@@ -208,6 +212,15 @@ export type CaseStudy = {
   metrics: CaseMetric[];
   /** Resultados qualitativos entregues. */
   outcomes: string[];
+  /**
+   * O que ainda NÃO dá para afirmar sobre este projeto.
+   *
+   * Nenhuma agência publica isso, e é exatamente por isso que publicar
+   * funciona. Um case que declara o próprio limite prova três coisas de uma
+   * vez: que o trabalho existiu, que foi medido, e que quem escreveu não
+   * inventa número quando o número não existe.
+   */
+  limite?: string;
   media:
     | {
         kind: "video";
@@ -216,12 +229,51 @@ export type CaseStudy = {
         poster: string;
         aspect: string;
       }
-    | { kind: "gallery"; images: string[]; aspect: string };
+    | { kind: "gallery"; images: string[]; aspect: string }
+    /** Case sem peça visual: o painel é construído com os próprios números. */
+    | { kind: "data"; destaque: string; rotulo: string; aspect: string };
   accent: string;
   featured?: boolean;
 };
 
 export const CASES: CaseStudy[] = [
+  {
+    id: "translima",
+    client: "TransLima Express",
+    sector: "Transporte e mudanças",
+    year: "2026",
+    category: "Tráfego e Performance",
+    headline: "R$ 300 de verba, 12 dias, e a conta aberta na mesa.",
+    summary:
+      "Primeira campanha de uma transportadora que atende pessoa física. Verba pequena, objetivo claro: descobrir se existe demanda antes de investir de verdade. Estruturamos público, criativo e leitura de dados, e ao final entregamos um relatório de sete páginas com o que funcionou, o que não funcionou e o que faltava medir.",
+    scope: [
+      "Estratégia de campanha",
+      "Criativos e copy de anúncio",
+      "Gestão de Meta Ads",
+      "Relatório com leitura, não só gráfico",
+    ],
+    metrics: [
+      { value: "R$ 0,36", label: "Custo por clique" },
+      { value: "32.530", label: "Pessoas alcançadas" },
+      { value: "837", label: "Cliques em 12 dias" },
+      { value: "R$ 300", label: "Verba total investida" },
+    ],
+    outcomes: [
+      "Demanda validada antes de aumentar a verba",
+      "Peça de melhor desempenho identificada: reel com a equipe, 10.677 visualizações",
+      "Relatório com decisão explícita para o ciclo seguinte",
+    ],
+    limite:
+      "Nesta primeira campanha o clique ia para o perfil do Instagram e de lá para o WhatsApp. Isso significa que não existe contagem de conversas iniciadas nem custo por contato, e por isso não afirmamos nada sobre vendas geradas. Não é um detalhe: é o principal achado do relatório, e a correção virou a primeira tarefa do ciclo seguinte. Publicamos assim porque preferimos mostrar o buraco a inventar um número.",
+    media: {
+      kind: "data",
+      destaque: "R$ 0,36",
+      rotulo: "custo por clique · 12 dias · R$ 300 investidos",
+      aspect: "16 / 9",
+    },
+    accent: "#f59e0b",
+    featured: true,
+  },
   {
     id: "sampaio-goncalves",
     client: "Sampaio & Gonçalves",
@@ -252,7 +304,6 @@ export const CASES: CaseStudy[] = [
       aspect: "16 / 9",
     },
     accent: "#c9a86a",
-    featured: true,
   },
   {
     id: "campdev",
@@ -321,44 +372,19 @@ export const CASES: CaseStudy[] = [
     },
     accent: "#3b82f6",
   },
-  {
-    id: "versa",
-    client: "Versa",
-    sector: "Marca própria",
-    year: "2026",
-    category: "Design Gráfico",
-    headline: "O sistema visual que aplicamos em nós mesmos primeiro.",
-    summary:
-      "Antes de vender método, aplicamos o nosso: posicionamento, sistema visual dark premium, plano de conteúdo com lógica de funil e uma série de peças que funcionam como um organismo único. Este site é a última camada desse trabalho.",
-    scope: [
-      "Posicionamento e tom de voz",
-      "Sistema visual dark premium",
-      "Plano editorial com funil",
-      "Roteiros e motion",
-    ],
-    metrics: [],
-    outcomes: [
-      "Identidade coerente do logo ao último slide",
-      "Plano de conteúdo com etapa de funil definida por peça",
-      "Site próprio construído em Next.js pelo mesmo time",
-    ],
-    media: {
-      kind: "gallery",
-      images: [
-        "/work/versa-01.webp",
-        "/work/versa-02.webp",
-        "/work/versa-03.webp",
-        "/work/versa-04.webp",
-        "/work/versa-05.webp",
-      ],
-      aspect: "4 / 5",
-    },
-    accent: "#7751bb",
-  },
 ];
 
+/**
+ * O case "Versa" saiu daqui de propósito.
+ *
+ * Marca própria numa prateleira de clientes ocupa espaço de prova social
+ * real e sinaliza escassez de cliente para quem está avaliando. O trabalho
+ * continua bom e o lugar dele é numa página "como aplicamos em nós mesmos",
+ * separada. Está no histórico do git, é só resgatar se a decisão mudar.
+ */
 export const CASE_FILTERS = [
   "Todos",
+  "Tráfego e Performance",
   "Sites & Landing Pages",
   "Design Gráfico",
   "Social & Motion",
@@ -494,3 +520,121 @@ export const FAQ: { q: string; a: string }[] = [
     a: "Porque a base do nosso trabalho é engenharia. Escrevemos código, versionamos, automatizamos processos e aplicamos IA onde ela gera ganho mensurável. Design gráfico e tráfego pago são serviços que oferecemos com excelência — mas a forma como resolvemos problemas é a de uma empresa de tecnologia.",
   },
 ];
+
+/* =========================================================================
+   PARA QUEM É E PARA QUEM NÃO É
+   -------------------------------------------------------------------------
+   Dizer para quem você não serve é a forma mais rápida de ganhar confiança
+   de quem você serve. E filtra lead ruim antes de gastar o tempo do
+   comercial, que numa empresa pequena é o recurso mais caro que existe.
+   ========================================================================= */
+
+export const AUDIENCE = {
+  fit: {
+    titulo: "Trabalhamos bem com",
+    itens: [
+      "Empresas que já vendem e querem previsibilidade, não um milagre",
+      "Quem consegue investir a partir de R$ 1.500 por mês em mídia",
+      "Clínicas, escritórios, comércio local e prestadores de serviço",
+      "Quem tem alguém para atender o lead que vai chegar",
+      "Quem prefere ouvir a verdade a ouvir o que quer",
+    ],
+  },
+  notFit: {
+    titulo: "Não somos a escolha certa para",
+    itens: [
+      "Quem quer post bonito sem estratégia por trás",
+      "Quem precisa de resultado em sete dias",
+      "Quem está procurando o menor preço da praça",
+      "Quem quer terceirizar a decisão junto com a execução",
+    ],
+  },
+} as const;
+
+/* =========================================================================
+   INVESTIMENTO
+   -------------------------------------------------------------------------
+   Esconder preço não protege a venda, só adia o desencontro. Estas são
+   faixas de ancoragem, não tabela fechada: o número exato sai depois do
+   escopo, e a página inteira diz isso.
+   ========================================================================= */
+
+export type FaixaInvestimento = {
+  servico: string;
+  entrada: string;
+  unidade: string;
+  prazo: string;
+  inclui: string[];
+  nota?: string;
+};
+
+export const INVESTIMENTO: FaixaInvestimento[] = [
+  {
+    servico: "Identidade e sistema visual",
+    entrada: "R$ 3.500",
+    unidade: "projeto fechado",
+    prazo: "3 a 5 semanas",
+    inclui: [
+      "Pesquisa e posicionamento",
+      "Marca e sistema visual completo",
+      "Manual de aplicação",
+      "Kit de peças para redes",
+    ],
+  },
+  {
+    servico: "Site ou landing page",
+    entrada: "R$ 3.500",
+    unidade: "projeto fechado",
+    prazo: "1 a 6 semanas",
+    inclui: [
+      "Código próprio, sem tema comprado",
+      "Medição instalada e validada",
+      "SEO técnico e Core Web Vitals",
+      "Integração com WhatsApp e analytics",
+    ],
+    nota: "Landing page fica na entrada da faixa. Site institucional completo sobe conforme o número de páginas.",
+  },
+  {
+    servico: "Gestão de tráfego pago",
+    entrada: "R$ 1.200",
+    unidade: "por mês",
+    prazo: "no ar na primeira semana",
+    inclui: [
+      "Estratégia, públicos e funil",
+      "Criativos e copy dos anúncios",
+      "Otimização e testes semanais",
+      "Relatório mensal com leitura",
+    ],
+    nota: "Fora a verba de mídia, que vai direto para a plataforma e é sua. Abaixo de R$ 1.500 por mês de verba, a gente costuma recomendar esperar.",
+  },
+  {
+    servico: "Infra de Medição",
+    entrada: "R$ 1.500",
+    unidade: "implantação",
+    prazo: "2 a 4 dias",
+    inclui: [
+      "Pixel e Conversions API validados",
+      "Eventos de conversão no GA4",
+      "Origem em cada link de WhatsApp",
+      "Planilha de qualificação implantada",
+    ],
+    nota: "É o serviço mais barato que oferecemos e costuma ser o que mais muda o resultado dos outros.",
+  },
+];
+
+/* =========================================================================
+   PROVA IMEDIATA
+   -------------------------------------------------------------------------
+   Faixa logo abaixo do hero. Existe para matar desconfiança nos primeiros
+   segundos, antes que o visitante decida se vale continuar rolando.
+   ========================================================================= */
+
+export const PROVA = {
+  clientes: [
+    "Sampaio & Gonçalves",
+    "TransLima Express",
+    "CampDev",
+    "LASI",
+  ],
+  linha: "Projetos no ar, com clientes que autorizaram aparecer aqui.",
+} as const;

@@ -111,7 +111,7 @@ export function Tech() {
 
       <div className="shell relative">
         <SectionHeading
-          index="06"
+          index="09"
           eyebrow="Tecnologia"
           title={
             <>
@@ -123,8 +123,16 @@ export function Tech() {
         />
 
         <div className="mt-14 grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
-          {/* ---- Janela de código ---- */}
-          <Reveal>
+          {/*
+            `min-w-0` no item da grade não é detalhe de estilo, é correção de
+            bug. Item de grid tem `min-width: auto` por padrão, então ele se
+            recusa a encolher abaixo da largura do conteúdo. Como o conteúdo
+            aqui é um bloco de código com linhas longas, a coluna esticava e
+            a PÁGINA INTEIRA passava a rolar de lado no celular, mesmo com o
+            `overflow-x-auto` no <pre>. O `overflow-x-auto` só funciona depois
+            que o item aceita ser mais estreito que o conteúdo.
+          */}
+          <Reveal className="min-w-0">
             <div
               ref={codeRef}
               className="border-gradient overflow-hidden rounded-2xl shadow-[0_40px_120px_-70px_rgba(0,0,0,1)]"

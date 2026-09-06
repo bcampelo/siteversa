@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# lixo do sandbox (o ambiente nao pode apagar arquivos, so mover)
+.git/.trash/

@@ -1,5 +1,10 @@
+"use client";
+
 import Link from "next/link";
-import type { ComponentProps, ReactNode } from "react";
+import type { ComponentProps, MouseEvent, ReactNode } from "react";
+import { track, type VersaEvent } from "@/lib/analytics";
+import { getAttribution } from "@/lib/attribution";
+import { withCampaignTag } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 
 type Variant = "primary" | "ghost" | "quiet";
@@ -36,6 +41,19 @@ function Inner({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * Botão e CTA do site.
+ *
+ * Virou componente de cliente por um motivo comercial, não técnico: todo
+ * clique de CTA precisa ser contado com a seção de origem junto. Antes disso
+ * o site tinha nove pontos de saída e nenhuma forma de saber qual deles
+ * trazia conversa.
+ *
+ * Nos links de WhatsApp o componente ainda reescreve a mensagem depois da
+ * montagem, acrescentando a campanha de origem no fim do texto. Assim a
+ * origem chega no atendimento mesmo que o analytics esteja bloqueado por
+ * extensão ou por recusa de cookie.
+ */
 export function Button({
   href,
   variant = "primary",
@@ -43,6 +61,10 @@ export function Button({
   className,
   children,
   external,
+  section = "desconhecida",
+  ctaLabel,
+  event,
+  onClick,
   ...rest
 }: {
   href: string;
@@ -51,19 +73,54 @@ export function Button({
   className?: string;
   children: ReactNode;
   external?: boolean;
+  /** Seção de onde o clique partiu. Vai junto no evento. */
+  section?: string;
+  /** Texto do CTA para o relatório. Sem isso o evento fica ilegível. */
+  ctaLabel?: string;
+  /** Sobrescreve o evento inferido. Raramente necessário. */
+  event?: VersaEvent;
 } & Omit<
   ComponentProps<typeof Link>,
   "href" | "className" | "children" | "ref"
 >) {
   const cls = cn(base, sizes[size], variants[variant], className);
 
-  if (external || href.startsWith("http") || href.startsWith("mailto")) {
+  const isWhatsApp = href.includes("wa.me");
+  const isMail = href.startsWith("mailto");
+  const isExternal = external || href.startsWith("http") || isMail;
+
+  function handleClick(e: MouseEvent<HTMLAnchorElement>) {
+    /*
+      A campanha de origem entra na mensagem no momento do clique, e não na
+      montagem. Reescrever o href aqui evita estado, evita divergência entre
+      servidor e cliente, e o navegador lê o atributo depois deste handler,
+      então a mensagem já sai com a origem embutida.
+    */
+    if (isWhatsApp) {
+      const a = getAttribution();
+      e.currentTarget.href = withCampaignTag(
+        href,
+        a.utm_campaign ?? a.last_utm_campaign,
+        section,
+      );
+    }
+
+    track(event ?? (isWhatsApp ? "whatsapp_click" : isMail ? "email_click" : "cta_click"), {
+      section,
+      label: ctaLabel,
+      destino: isWhatsApp ? "whatsapp" : isMail ? "email" : href,
+    });
+    onClick?.(e as never);
+  }
+
+  if (isExternal) {
     return (
       <a
         href={href}
-        target={href.startsWith("mailto") ? undefined : "_blank"}
+        target={isMail ? undefined : "_blank"}
         rel="noopener noreferrer"
         className={cls}
+        onClick={handleClick}
         {...rest}
       >
         <Inner>{children}</Inner>
@@ -72,7 +129,7 @@ export function Button({
   }
 
   return (
-    <Link href={href} className={cls} {...rest}>
+    <Link href={href} className={cls} onClick={handleClick} {...rest}>
       <Inner>{children}</Inner>
     </Link>
   );

@@ -5,7 +5,9 @@ import { useState } from "react";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { FAQ } from "@/lib/content";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { SITE } from "@/lib/site";
+import { whatsappUrl } from "@/lib/whatsapp";
 
 export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
@@ -16,7 +18,7 @@ export function Faq() {
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
           <div className="lg:sticky lg:top-28 lg:self-start">
             <SectionHeading
-              index="07"
+              index="10"
               eyebrow="Perguntas frequentes"
               title={
                 <>
@@ -30,14 +32,16 @@ export function Faq() {
                 Ficou alguma dúvida que não está aqui? Manda no WhatsApp — a
                 gente responde de verdade, não com robô.
               </p>
-              <a
-                href={SITE.contact.whatsapp}
+              <TrackedLink
+                href={whatsappUrl("faq")}
+                section="faq"
+                ctaLabel="WhatsApp"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link-underline mt-3 inline-block text-[0.875rem] text-brand-soft"
               >
                 {SITE.contact.whatsappDisplay}
-              </a>
+              </TrackedLink>
             </Reveal>
           </div>
 

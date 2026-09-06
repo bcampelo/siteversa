@@ -6,7 +6,10 @@ import { useEffect, useState } from "react";
 import { VersaMark } from "@/components/brand/VersaMark";
 import { VersaWordmark } from "@/components/brand/VersaWordmark";
 import { Button, WhatsAppIcon } from "@/components/ui/Button";
-import { SITE, CTA } from "@/lib/site";
+import { track } from "@/lib/analytics";
+import { TrackedLink } from "@/components/ui/TrackedLink";
+import { SITE, CTA, DIAGNOSTICO_HREF } from "@/lib/site";
+import { whatsappUrl } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 
 export function Header() {
@@ -69,29 +72,47 @@ export function Header() {
               className="hidden items-center gap-1 lg:flex"
             >
               {SITE.nav.map((item) => (
-                <a
+                <TrackedLink
                   key={item.href}
                   href={item.href}
+                  section="header-nav"
+                  ctaLabel={item.label}
                   className="relative rounded-full px-3.5 py-2 text-[0.875rem] text-fog transition-colors duration-300 hover:text-chalk"
                 >
                   {item.label}
-                </a>
+                </TrackedLink>
               ))}
             </nav>
 
             <div className="flex items-center gap-2">
               {/* No mobile o CTA vira só o ícone: continua sempre acessível
                   sem competir por espaço com o menu. */}
-              <Button
-                href={SITE.contact.whatsapp}
-                external
-                size="md"
-                variant="primary"
-                className="max-sm:size-11 max-sm:px-0"
-                aria-label={CTA.primaryShort}
+              {/*
+                No celular o CTA virava só o ícone do WhatsApp, ou seja, o
+                único caminho visível era o mais caro. Agora o botão leva ao
+                diagnóstico e o WhatsApp fica ao lado, para quem já decidiu.
+              */}
+              <TrackedLink
+                href={whatsappUrl("header")}
+                section="header"
+                ctaLabel="WhatsApp"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={CTA.whatsapp}
+                className="grid size-11 place-items-center rounded-full border border-chalk/12 bg-chalk/[0.03] text-chalk transition-colors duration-300 hover:border-brand-soft/45"
               >
                 <WhatsAppIcon />
-                <span className="max-sm:hidden">{CTA.primaryShort}</span>
+              </TrackedLink>
+
+              <Button
+                href={DIAGNOSTICO_HREF}
+                size="md"
+                variant="primary"
+                section="header"
+                ctaLabel={CTA.primaryShort}
+                className="max-lg:hidden"
+              >
+                {CTA.primaryShort}
               </Button>
 
               {/* Botão do menu mobile */}
@@ -154,7 +175,13 @@ export function Header() {
                   >
                     <a
                       href={item.href}
-                      onClick={() => setOpen(false)}
+                      onClick={() => {
+                        track("nav_click", {
+                          section: "menu-mobile",
+                          label: item.label,
+                        });
+                        setOpen(false);
+                      }}
                       className="flex items-baseline justify-between py-5 text-display"
                     >
                       {item.label}
@@ -168,16 +195,34 @@ export function Header() {
             </nav>
 
             <div className="relative flex flex-col gap-3">
-              <Button href={SITE.contact.whatsapp} external size="lg">
-                <WhatsAppIcon />
-                {CTA.primaryShort}
+              <Button
+                href={DIAGNOSTICO_HREF}
+                size="lg"
+                section="menu-mobile"
+                ctaLabel={CTA.primary}
+                onClick={() => setOpen(false)}
+              >
+                {CTA.primary}
               </Button>
-              <a
+              <Button
+                href={whatsappUrl("menu-mobile")}
+                external
+                variant="ghost"
+                size="lg"
+                section="menu-mobile"
+                ctaLabel={CTA.whatsapp}
+              >
+                <WhatsAppIcon />
+                {CTA.whatsapp}
+              </Button>
+              <TrackedLink
                 href={`mailto:${SITE.contact.email}`}
+                section="menu-mobile"
+                ctaLabel="E-mail"
                 className="text-center text-sm text-fog"
               >
                 {SITE.contact.email}
-              </a>
+              </TrackedLink>
             </div>
           </motion.div>
         )}

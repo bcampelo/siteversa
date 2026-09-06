@@ -1,7 +1,9 @@
 import { VersaMark } from "@/components/brand/VersaMark";
 import { VersaWordmark } from "@/components/brand/VersaWordmark";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { SERVICES } from "@/lib/content";
 import { SITE } from "@/lib/site";
+import { whatsappUrl } from "@/lib/whatsapp";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -68,40 +70,54 @@ export function Footer() {
             <p className="text-eyebrow text-fog-dim">Contato</p>
             <ul className="mt-5 flex flex-col gap-3 text-[0.875rem]">
               <li>
-                <a
-                  href={SITE.contact.whatsapp}
+                <TrackedLink
+                  href={whatsappUrl("footer")}
+                  section="footer"
+                  ctaLabel="WhatsApp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="link-underline text-chalk"
                 >
                   {SITE.contact.whatsappDisplay}
-                </a>
+                </TrackedLink>
               </li>
               <li>
-                <a
+                <TrackedLink
                   href={`mailto:${SITE.contact.email}`}
+                  section="footer"
+                  ctaLabel="E-mail"
                   className="link-underline break-all text-fog transition-colors duration-300 hover:text-chalk"
                 >
                   {SITE.contact.email}
-                </a>
+                </TrackedLink>
               </li>
               <li>
-                <a
+                <TrackedLink
                   href={SITE.contact.instagram}
+                  section="footer"
+                  ctaLabel="Instagram"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="link-underline text-fog transition-colors duration-300 hover:text-chalk"
                 >
                   Instagram {SITE.contact.instagramHandle}
-                </a>
+                </TrackedLink>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="mt-14 flex flex-col gap-4 border-t border-chalk/8 pt-7 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-[0.75rem] text-fog-dim">
-            © {year} {SITE.name}. Todos os direitos reservados.
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.75rem] text-fog-dim">
+            <span>
+              © {year} {SITE.name}. Todos os direitos reservados.
+            </span>
+            <a
+              href="/privacidade"
+              className="link-underline transition-colors duration-300 hover:text-chalk"
+            >
+              Privacidade e dados
+            </a>
           </p>
           <p className="flex items-center gap-2 text-[0.75rem] text-fog-dim">
             Site desenhado e desenvolvido pela Versa

@@ -7,7 +7,9 @@ import { SectionHeading } from "@/components/layout/SectionHeading";
 import { ArrowIcon, Button, WhatsAppIcon } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { CASES, CASE_FILTERS, type CaseStudy } from "@/lib/content";
-import { SITE } from "@/lib/site";
+import { DIAGNOSTICO_HREF } from "@/lib/site";
+import { whatsappUrl } from "@/lib/whatsapp";
+import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 export function Work() {
@@ -31,7 +33,7 @@ export function Work() {
                 <span className="text-gradient">com nome e sobrenome.</span>
               </>
             }
-            lede="Sem mockup genérico de banco de imagem. Estes são projetos que estão no ar, com clientes que autorizaram aparecer aqui."
+            lede="Sem mockup genérico de banco de imagem. Projetos no ar, com clientes que autorizaram aparecer aqui, e com o que ainda não conseguimos medir dito por escrito."
             className="max-w-2xl"
           />
 
@@ -96,14 +98,31 @@ export function Work() {
                 Seu projeto pode ser o próximo desta lista.
               </p>
               <p className="mt-2 max-w-[48ch] text-[0.875rem] text-fog">
-                Conte o que a sua empresa precisa. Se não for o nosso escopo,
-                dizemos na hora — e indicamos quem resolve.
+                Responda seis perguntas e a gente diz o que faria no seu caso.
+                Se não for o nosso escopo, dizemos na hora e indicamos quem
+                resolve.
               </p>
             </div>
-            <Button href={SITE.contact.whatsapp} external size="lg">
-              <WhatsAppIcon />
-              Começar uma conversa
-            </Button>
+            <div className="flex shrink-0 flex-col gap-2 sm:items-end">
+              <Button
+                href={DIAGNOSTICO_HREF}
+                size="lg"
+                section="trabalhos"
+                ctaLabel="Quero um resultado desse tipo"
+              >
+                Quero um resultado desse tipo
+              </Button>
+              <Button
+                href={whatsappUrl("trabalhos")}
+                external
+                variant="quiet"
+                section="trabalhos"
+                ctaLabel="WhatsApp"
+              >
+                <WhatsAppIcon />
+                Ou chame no WhatsApp
+              </Button>
+            </div>
           </div>
         </Reveal>
       </div>
@@ -127,7 +146,10 @@ function CaseCard({
   return (
     <button
       type="button"
-      onClick={onOpen}
+      onClick={() => {
+        track("case_open", { section: "trabalhos", case: study.id });
+        onOpen();
+      }}
       // Sem aria-label: o nome acessível vem do conteúdo visível do cartão
       // (categoria, setor, cliente e headline), evitando divergência entre
       // o que se lê e o que o leitor de tela anuncia.
@@ -142,6 +164,12 @@ function CaseCard({
             src={study.media.src}
             srcWebm={study.media.srcWebm}
             poster={study.media.poster}
+          />
+        ) : study.media.kind === "data" ? (
+          <DataPanel
+            destaque={study.media.destaque}
+            rotulo={study.media.rotulo}
+            accent={study.accent}
           />
         ) : (
           <>
@@ -205,6 +233,39 @@ function CaseCard({
         </span>
       </div>
     </button>
+  );
+}
+
+/* =========================================================================
+   Painel de dados
+   -------------------------------------------------------------------------
+   Case de mídia paga nem sempre tem peça bonita para mostrar, e forçar uma
+   imagem genérica de banco seria mentir sobre o que o trabalho foi. Quando
+   o resultado É o número, o número vira a capa.
+   ========================================================================= */
+
+function DataPanel({
+  destaque,
+  rotulo,
+  accent,
+}: {
+  destaque: string;
+  rotulo: string;
+  accent: string;
+}) {
+  return (
+    <div className="relative flex size-full flex-col items-center justify-center overflow-hidden bg-ink-3 px-6 text-center">
+      <div className="bg-grid absolute inset-0 opacity-40" aria-hidden />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 size-[26rem] max-w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[70px] opacity-25"
+        style={{ backgroundColor: accent }}
+      />
+      <p className="relative font-display text-[clamp(2.75rem,8vw,5rem)] font-bold leading-none tracking-[-0.04em] text-chalk">
+        {destaque}
+      </p>
+      <p className="relative mt-4 max-w-[30ch] text-eyebrow text-fog">{rotulo}</p>
+    </div>
   );
 }
 
@@ -363,6 +424,14 @@ function CaseModal({
                     controls
                   />
                 </div>
+              ) : study.media.kind === "data" ? (
+                <div style={{ aspectRatio: study.media.aspect }}>
+                  <DataPanel
+                    destaque={study.media.destaque}
+                    rotulo={study.media.rotulo}
+                    accent={study.accent}
+                  />
+                </div>
               ) : (
                 <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto p-4 sm:p-6">
                   {study.media.images.map((src, i) => (
@@ -438,6 +507,17 @@ function CaseModal({
                     </li>
                   ))}
                 </ul>
+
+                {study.limite && (
+                  <div className="mt-8 rounded-2xl border border-chalk/10 bg-ink-3/60 p-5">
+                    <p className="text-eyebrow text-fog-dim">
+                      O que ainda não dá para afirmar
+                    </p>
+                    <p className="mt-3 max-w-[58ch] text-[0.875rem] leading-relaxed text-fog">
+                      {study.limite}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <aside className="flex flex-col gap-7">
@@ -460,12 +540,13 @@ function CaseModal({
                     Quer um projeto com esse nível de cuidado?
                   </p>
                   <Button
-                    href={SITE.contact.whatsapp}
-                    external
+                    href="/diagnostico"
                     variant="ghost"
                     className="mt-4 w-full"
+                    section={`case-${study.id}`}
+                    ctaLabel="Quero um resultado desse tipo"
                   >
-                    Falar com a Versa
+                    Quero um resultado desse tipo
                     <ArrowIcon />
                   </Button>
                 </div>

@@ -6,7 +6,8 @@ import { SectionHeading } from "@/components/layout/SectionHeading";
 import { ArrowIcon, Button } from "@/components/ui/Button";
 import { SpotlightCard } from "@/components/ui/Spotlight";
 import { SERVICES, type Service } from "@/lib/content";
-import { SITE } from "@/lib/site";
+import { DIAGNOSTICO_HREF } from "@/lib/site";
+import { whatsappUrl, type WhatsAppSource } from "@/lib/whatsapp";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import { ServiceGlyph } from "./ServiceGlyph";
 
@@ -15,6 +16,13 @@ import { ServiceGlyph } from "./ServiceGlyph";
  * cima, com o anterior recuando em escala. A leitura fica focada em um
  * serviço por vez, sem a sensação de lista comprida.
  */
+/** CTA por serviço, escrito na intenção de quem lê aquele card. */
+const SERVICE_CTA: Record<string, string> = {
+  design: "Avaliar a minha marca",
+  trafego: "Ver se a minha verba é suficiente",
+  web: "Ver quanto meu site está perdendo",
+};
+
 export function Services() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canStack = useMediaQuery("(min-width: 1024px)");
@@ -23,12 +31,12 @@ export function Services() {
     <section id="servicos" className="relative scroll-mt-24 py-24 sm:py-32">
       <div className="shell">
         <SectionHeading
-          index="02"
+          index="03"
           eyebrow="O que fazemos"
           title={
             <>
               Três frentes. Um objetivo:{" "}
-              <span className="text-gradient">crescimento.</span>
+              <span className="text-gradient">uma conta que fecha.</span>
             </>
           }
           lede="Não vendemos peça avulsa. Vendemos o resultado que a peça precisa produzir — e cuidamos de tudo que existe entre as duas coisas."
@@ -153,7 +161,7 @@ function StackedCard({
                 <ServiceGlyph id={service.id} />
               </div>
 
-              <ul className="grid grid-cols-1 gap-x-6 gap-y-0 sm:grid-cols-2 lg:mt-24 lg:grid-cols-1">
+              <ul className="grid grid-cols-1 gap-x-6 gap-y-0 sm:grid-cols-2 lg:mt-20 lg:grid-cols-1">
                 {service.deliverables.map((d) => (
                   <li
                     key={d}
@@ -167,6 +175,34 @@ function StackedCard({
                   </li>
                 ))}
               </ul>
+
+              {/*
+                Cada serviço passou a ter o próprio CTA. Antes existia um
+                único botão genérico depois dos três cards: quem se
+                identificava com tráfego precisava rolar, achar um botão que
+                não falava de tráfego e mandar uma mensagem que não dizia de
+                onde veio.
+              */}
+              <div className="flex flex-wrap items-center gap-3">
+                <Button
+                  href={DIAGNOSTICO_HREF}
+                  variant="ghost"
+                  section={`servico-${service.id}`}
+                  ctaLabel={SERVICE_CTA[service.id] ?? "Ver o que faz sentido"}
+                >
+                  {SERVICE_CTA[service.id] ?? "Ver o que faz sentido"}
+                  <ArrowIcon />
+                </Button>
+                <Button
+                  href={whatsappUrl(`servico-${service.id}` as WhatsAppSource)}
+                  external
+                  variant="quiet"
+                  section={`servico-${service.id}`}
+                  ctaLabel="Falar sobre isso"
+                >
+                  Falar sobre isso
+                </Button>
+              </div>
             </div>
           </div>
         </SpotlightCard>
@@ -177,14 +213,20 @@ function StackedCard({
 
 export function ServicesCta() {
   return (
-    <div className="shell mt-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-      <Button href={SITE.contact.whatsapp} external variant="ghost" size="lg">
+    <div className="shell mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+      <Button
+        href={DIAGNOSTICO_HREF}
+        variant="ghost"
+        size="lg"
+        section="servicos"
+        ctaLabel="Descobrir por onde começar"
+      >
         Descobrir por onde começar
         <ArrowIcon />
       </Button>
-      <p className="max-w-[34ch] text-[0.8125rem] leading-relaxed text-fog-dim">
-        Na primeira conversa a gente diz qual frente resolve o seu gargalo —
-        mesmo que seja só uma delas.
+      <p className="max-w-[36ch] text-[0.8125rem] leading-relaxed text-fog-dim">
+        Seis perguntas e a gente diz qual frente resolve o seu gargalo, mesmo
+        que seja só uma delas. Ou nenhuma.
       </p>
     </div>
   );
