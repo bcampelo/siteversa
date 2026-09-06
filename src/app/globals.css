@@ -1,0 +1,744 @@
+@import "tailwindcss";
+
+/* =========================================================================
+   VERSA — Design System
+   Tokens extraídos da identidade oficial (LogosVersa2.ai) e do sistema
+   visual dark premium já usado nas peças da marca.
+   ========================================================================= */
+
+@theme {
+  /* ---- Tipografia ------------------------------------------------------ */
+  --font-display: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-editorial: var(--font-instrument-serif), Georgia, serif;
+
+  /* ---- Cores: base ---------------------------------------------------- */
+  --color-ink: #08070d;
+  --color-ink-2: #0b0912;
+  --color-ink-3: #100d1a;
+  --color-ink-4: #17131f;
+  --color-ink-5: #221c2e;
+
+  --color-chalk: #f4f1fb;
+  --color-fog: #a8a1bd;
+  /* AA em todos os fundos escuros do site (>= 5.4:1 a 11px) */
+  --color-fog-dim: #8b84a3;
+
+  /* ---- Cores: marca (vetores oficiais) -------------------------------- */
+  --color-brand: #7751bb;
+  --color-brand-deep: #44267b;
+  --color-brand-soft: #c9baff;
+  --color-brand-hot: #8b5cf0;
+
+  /* ---- Movimento ------------------------------------------------------ */
+  --ease-versa: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0.05, 0.36, 1);
+
+  /* ---- Animações ------------------------------------------------------ */
+  --animate-marquee: marquee 44s linear infinite;
+  --animate-marquee-reverse: marquee-reverse 44s linear infinite;
+  --animate-breathe: breathe 7s var(--ease-in-out-soft) infinite;
+  --animate-shimmer: shimmer 2.8s linear infinite;
+  --animate-caret: caret 1.05s steps(1) infinite;
+  --animate-drift: drift 20s var(--ease-in-out-soft) infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@keyframes marquee-reverse {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.06);
+  }
+}
+@keyframes shimmer {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(220%);
+  }
+}
+@keyframes caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 140;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  70%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(2%, -3%, 0);
+  }
+}
+
+/* =========================================================================
+   Base
+   ========================================================================= */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: color-mix(in oklab, var(--color-chalk) 8%, transparent);
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+    /* Reserva o espaço da barra de rolagem para sempre. Sem isto, todo
+       `overflow: hidden` (intro, menu mobile, modal de case) muda a largura
+       da viewport e o layout dá um pulo — CLS de graça, do pior tipo. */
+    scrollbar-gutter: stable;
+  }
+
+  /* Lenis assume o controle do scroll; evita conflito com o smooth nativo */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  html.lenis {
+    scroll-behavior: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-chalk);
+    font-family: var(--font-sans);
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-brand) 60%, transparent);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-soft);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @supports selector(::-webkit-scrollbar) {
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--color-ink);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: color-mix(in oklab, var(--color-brand) 45%, var(--color-ink));
+      border-radius: 999px;
+      border: 2px solid var(--color-ink);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--color-brand);
+    }
+  }
+}
+
+/* =========================================================================
+   Tipografia — escala fluida
+   ========================================================================= */
+
+@utility text-hero {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.65rem, 7vw, 6.75rem);
+  line-height: 0.92;
+  letter-spacing: -0.042em;
+}
+
+/* Segunda voz do hero: o "beat" que fecha a headline, um degrau abaixo. */
+@utility text-hero-beat {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3.9vw, 3.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.032em;
+}
+
+/* Declaração longa (manifesto): grande, mas legível em bloco. */
+@utility text-statement {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3.5vw, 3rem);
+  line-height: 1.14;
+  letter-spacing: -0.03em;
+}
+
+@utility text-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 5.2vw, 4.6rem);
+  line-height: 0.96;
+  letter-spacing: -0.038em;
+}
+
+@utility text-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 2.6vw, 2.35rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+@utility text-subtitle {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.125rem, 1.5vw, 1.375rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+@utility text-lede {
+  font-size: clamp(1.0625rem, 1.3vw, 1.3125rem);
+  line-height: 1.6;
+  letter-spacing: -0.011em;
+}
+
+@utility text-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* =========================================================================
+   Utilitários visuais
+   ========================================================================= */
+
+@utility text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-brand-soft) 0%,
+    #a887f5 44%,
+    var(--color-brand) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  /* pequena folga para itálicos e letter-spacing negativo não serem cortados */
+  padding-inline-end: 0.03em;
+  margin-inline-end: -0.03em;
+}
+
+@utility shell {
+  width: 100%;
+  max-width: 84rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 4.5rem);
+}
+
+@utility glass {
+  background: linear-gradient(
+    160deg,
+    color-mix(in oklab, var(--color-chalk) 6%, transparent) 0%,
+    color-mix(in oklab, var(--color-chalk) 2%, transparent) 100%
+  );
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--color-chalk) 9%, transparent);
+}
+
+@utility border-gradient {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--color-ink-2), var(--color-ink-2)) padding-box,
+    linear-gradient(
+        140deg,
+        color-mix(in oklab, var(--color-brand-soft) 42%, transparent),
+        color-mix(in oklab, var(--color-chalk) 6%, transparent) 40%,
+        color-mix(in oklab, var(--color-brand) 32%, transparent)
+      )
+      border-box;
+}
+
+@utility mask-edges {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+}
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-chalk) 5%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-chalk) 5%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 64px 64px;
+}
+
+@utility halo {
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    color-mix(in oklab, var(--color-brand-hot) 42%, transparent) 0%,
+    color-mix(in oklab, var(--color-brand-deep) 22%, transparent) 45%,
+    transparent 72%
+  );
+}
+
+/* =========================================================================
+   Componentes utilitários
+   ========================================================================= */
+
+/* Spotlight que segue o ponteiro (--mx / --my definidas via JS) */
+.spotlight-host {
+  position: relative;
+  isolation: isolate;
+}
+.spotlight-host::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 420ms var(--ease-versa);
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in oklab, var(--color-brand-soft) 24%, transparent),
+    transparent 70%
+  );
+  z-index: 0;
+}
+.spotlight-host:hover::before,
+.spotlight-host:focus-within::before {
+  opacity: 1;
+}
+
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 480ms var(--ease-versa);
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+/* Ruído sutil de filme — dá textura premium ao fundo */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* =========================================================================
+   Intro de marca + revelação do hero — 100% CSS
+   -------------------------------------------------------------------------
+   Por que sem JavaScript:
+
+   1. O elemento de LCP do site é a headline. Animá-la com JS significaria
+      esperar hidratação para o maior conteúdo aparecer.
+   2. O preloader também é renderizado no servidor. Se dependesse de
+      hidratação, o visitante em conexão ruim veria o hero primeiro e a
+      cortina cairia *depois* — o oposto do efeito pretendido.
+
+   Um script inline (ver `layout.tsx`) decide antes da primeira pintura se a
+   intro roda e marca `data-intro="1"` no <html>. Sem intro, o offset é zero
+   e o hero entra imediatamente. Uma decisão, dois consumidores, zero
+   divergência.
+
+   Linha do tempo (quando a intro roda):
+     0 ms      marca começa a se montar peça por peça
+     380 ms    letras do logotipo entram em cascata
+     1300 ms   cortina começa a subir; marca recua para o canto
+     1360 ms   headline do hero começa a subir por trás da cortina
+     2100 ms   cortina fora da tela
+   ========================================================================= */
+
+:root {
+  --intro-offset: 0ms;
+}
+html[data-intro="1"] {
+  --intro-offset: 1360ms;
+  /* trava o scroll durante a intro; liberado por [data-intro-done] */
+  overflow: hidden;
+}
+html[data-intro="1"][data-intro-done] {
+  overflow: visible;
+}
+
+/* --- Cortina ----------------------------------------------------------- */
+.preloader {
+  display: none;
+}
+html[data-intro="1"] .preloader {
+  display: flex;
+  animation: curtain-up 800ms var(--ease-in-out-soft) 1300ms forwards;
+}
+html[data-intro="1"][data-intro-done] .preloader {
+  visibility: hidden;
+}
+@keyframes curtain-up {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+/* A marca recua para o canto superior esquerdo — o lugar dela no cabeçalho */
+html[data-intro="1"] .preloader-mark {
+  animation: mark-exit 780ms var(--ease-versa) 1280ms forwards;
+}
+@keyframes mark-exit {
+  to {
+    transform: translate3d(-32vw, -34vh, 0) scale(0.26);
+    opacity: 0.2;
+  }
+}
+
+html[data-intro="1"] .preloader-fade {
+  animation: preloader-fade 320ms var(--ease-versa) 1240ms forwards;
+}
+@keyframes preloader-fade {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+html[data-intro="1"] .preloader-bar {
+  animation: preloader-bar 1240ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@keyframes preloader-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* --- Hero -------------------------------------------------------------- */
+.hero-line > span {
+  animation: hero-line-up 1000ms var(--ease-versa) both;
+  animation-delay: calc(var(--intro-offset) + var(--d, 0ms));
+}
+@keyframes hero-line-up {
+  from {
+    transform: translateY(118%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.hero-fade {
+  animation: hero-fade-up 900ms var(--ease-versa) both;
+  animation-delay: calc(var(--intro-offset) + var(--d, 0ms));
+}
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* =========================================================================
+   Marca — animações do monograma e do logotipo
+   ========================================================================= */
+
+.versa-mark {
+  display: block;
+  overflow: visible;
+}
+
+.versa-mark g {
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+/* --- Entrada em cascata: a marca se monta ------------------------------ */
+.versa-mark--intro .versa-base-l,
+.versa-mark--intro .versa-base-r,
+.versa-mark--intro .versa-crown-l,
+.versa-mark--intro .versa-crown-r,
+.versa-mark--intro .versa-wing-l,
+.versa-mark--intro .versa-wing-r {
+  animation-duration: 900ms;
+  animation-timing-function: var(--ease-versa);
+  animation-fill-mode: both;
+}
+
+.versa-mark--intro .versa-base-l {
+  animation-name: mark-base-l;
+}
+.versa-mark--intro .versa-base-r {
+  animation-name: mark-base-r;
+}
+.versa-mark--intro .versa-crown-l {
+  animation-name: mark-crown-l;
+  animation-delay: 140ms;
+}
+.versa-mark--intro .versa-crown-r {
+  animation-name: mark-crown-r;
+  animation-delay: 140ms;
+}
+.versa-mark--intro .versa-wing-l {
+  animation-name: mark-wing;
+  animation-delay: 260ms;
+}
+.versa-mark--intro .versa-wing-r {
+  animation-name: mark-wing;
+  animation-delay: 330ms;
+}
+
+@keyframes mark-base-l {
+  from {
+    opacity: 0;
+    transform: translate(-90px, 70px) rotate(-14deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes mark-base-r {
+  from {
+    opacity: 0;
+    transform: translate(90px, 70px) rotate(14deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes mark-crown-l {
+  from {
+    opacity: 0;
+    transform: translate(-46px, -80px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes mark-crown-r {
+  from {
+    opacity: 0;
+    transform: translate(46px, -80px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes mark-wing {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scaleY(0.55);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Passagem de luz --------------------------------------------------- */
+.versa-mark--sweep .versa-sweep-bar {
+  animation: mark-sweep 3.4s var(--ease-in-out-soft) infinite;
+  animation-delay: 0.75s;
+}
+@keyframes mark-sweep {
+  0%,
+  8% {
+    transform: translateX(-420px);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.55;
+  }
+  46% {
+    transform: translateX(760px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(760px);
+    opacity: 0;
+  }
+}
+
+/* --- Microinteração: a coroa se abre e a marca acende ------------------ */
+.group\/logo:hover .versa-mark .versa-crown-l,
+.group\/logo:focus-visible .versa-mark .versa-crown-l {
+  transform: translate(-26px, -14px);
+}
+.group\/logo:hover .versa-mark .versa-crown-r,
+.group\/logo:focus-visible .versa-mark .versa-crown-r {
+  transform: translate(26px, -14px);
+}
+.group\/logo:hover .versa-mark .versa-base-l {
+  transform: translate(-16px, 8px);
+}
+.group\/logo:hover .versa-mark .versa-base-r {
+  transform: translate(16px, 8px);
+}
+.group\/logo .versa-mark g {
+  transition:
+    transform 620ms var(--ease-versa),
+    filter 620ms var(--ease-versa);
+}
+.group\/logo:hover .versa-mark {
+  filter: drop-shadow(0 0 14px color-mix(in oklab, var(--color-brand) 65%, transparent));
+}
+
+/* --- Logotipo: letras em cascata --------------------------------------- */
+.versa-wordmark {
+  display: block;
+  overflow: visible;
+}
+.versa-wordmark .versa-letter {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  will-change: transform, opacity;
+}
+/* Tempos casados com MIN_MS do preloader: as cinco letras terminam de
+   entrar pouco antes da cortina começar a subir. */
+.versa-wordmark--intro .versa-letter {
+  animation: letter-in 700ms var(--ease-versa) both;
+}
+.versa-wordmark--intro .versa-letter:nth-child(1) {
+  animation-delay: 380ms;
+}
+.versa-wordmark--intro .versa-letter:nth-child(2) {
+  animation-delay: 425ms;
+}
+.versa-wordmark--intro .versa-letter:nth-child(3) {
+  animation-delay: 470ms;
+}
+.versa-wordmark--intro .versa-letter:nth-child(4) {
+  animation-delay: 515ms;
+}
+.versa-wordmark--intro .versa-letter:nth-child(5) {
+  animation-delay: 560ms;
+}
+@keyframes letter-in {
+  from {
+    opacity: 0;
+    transform: translateY(38px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* =========================================================================
+   Acessibilidade — prefers-reduced-motion
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .grain {
+    display: none;
+  }
+}
