@@ -102,7 +102,7 @@ export function Roadmap() {
             ))}
           </svg>
 
-          <ol className="contents">
+          <ol className="contents" role="list">
             {ROADMAP.steps.map((s, i) => {
               const left = i % 2 === 0;
               return (

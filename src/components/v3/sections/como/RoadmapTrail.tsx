@@ -53,7 +53,7 @@ function collect(el: HTMLElement): Variant {
  * linha de 4 em 4 e guarda o comprimento em que ela chega ao y de cada ponto.
  * No celular os pontos são HTML, então vale a posição real deles.
  */
-function measure(v: Variant, top: number) {
+function measure(v: Variant, top: number, fixed: boolean) {
   if (v.mobile) {
     v.marks = v.dots.map((d) => {
       const r = d.getBoundingClientRect();
@@ -61,6 +61,12 @@ function measure(v: Variant, top: number) {
     });
   } else if (v.path) {
     v.length = v.path.getTotalLength();
+    // Só aqui, com a variante visível: num SVG com display:none alguns motores
+    // lançam erro ou devolvem 0 em getTotalLength
+    if (!fixed) {
+      v.path.style.strokeDasharray = String(v.length);
+      v.path.style.strokeDashoffset = String(v.length);
+    }
     const ys = v.dots.map((d) => Number(d.getAttribute("cy")));
     v.marks = [];
     let i = 0;
@@ -74,6 +80,8 @@ function measure(v: Variant, top: number) {
     while (v.marks.length < ys.length) v.marks.push(v.length);
   }
   v.measured = true;
+  // Força o próximo update a reescrever o deslocamento que a medição acabou de zerar
+  v.last = -1;
 }
 
 /**
@@ -102,14 +110,10 @@ export function RoadmapTrail({ children }: { children: ReactNode }) {
       host.querySelectorAll<HTMLElement>("[data-rm-variant]"),
     ).map(collect);
 
-    // Sem rolagem para acompanhar a linha fica inteira (é o estilo de base)
+    // Sem rolagem para acompanhar a linha fica inteira (é o estilo de base).
+    // O traço do desktop é preparado em measure(), quando ele está visível.
     if (!fixed) {
       for (const v of variants) {
-        if (v.path) {
-          v.length = v.path.getTotalLength();
-          v.path.style.strokeDasharray = String(v.length);
-          v.path.style.strokeDashoffset = String(v.length);
-        }
         if (v.line) v.line.style.transform = "scaleY(0)";
       }
     }
@@ -125,7 +129,7 @@ export function RoadmapTrail({ children }: { children: ReactNode }) {
           v.measured = false;
           continue;
         }
-        if (!v.measured) measure(v, rect.top);
+        if (!v.measured) measure(v, rect.top, fixed);
 
         const p = fixed
           ? 1
