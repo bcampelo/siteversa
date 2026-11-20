@@ -41,15 +41,20 @@ export function InkTrail() {
       canvas.remove();
       return;
     }
-    const color = getComputedStyle(document.documentElement)
-      .getPropertyValue("--color-accent")
-      .trim();
+    const root = document.documentElement;
+    const color = getComputedStyle(root).getPropertyValue("--color-accent").trim();
+    // Sem o token não há cor para desenhar: não monta o rastro
+    if (!color) {
+      canvas.remove();
+      return;
+    }
 
     let dpr = 1;
     const fit = () => {
       dpr = window.devicePixelRatio || 1;
-      canvas.width = Math.round(window.innerWidth * dpr);
-      canvas.height = Math.round(window.innerHeight * dpr);
+      // clientWidth/Height: o canvas é 100% da viewport sem a barra de rolagem
+      canvas.width = Math.round(root.clientWidth * dpr);
+      canvas.height = Math.round(root.clientHeight * dpr);
     };
     fit();
 
@@ -60,11 +65,11 @@ export function InkTrail() {
       frame = 0;
       pts = pts.filter((p) => now - p.t < LIFE_MS);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      ctx.clearRect(0, 0, root.clientWidth, root.clientHeight);
       // Sem pontos: limpa e não pede outro quadro
       if (!pts.length) return;
 
-      ctx.strokeStyle = color || "#a887f5";
+      ctx.strokeStyle = color;
       ctx.lineCap = "round";
       for (let i = 1; i < pts.length; i++) {
         const a = pts[i - 1];

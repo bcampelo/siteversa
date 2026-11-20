@@ -29,8 +29,9 @@ export function DrawGroup({
   replayOnHover?: boolean;
   /**
    * Refaz o desenho sozinho a cada `replayEvery` ms, enquanto metade do grupo
-   * está na tela e a aba está ativa. Divide o intervalo mínimo com o hover:
-   * um replay recente, de qualquer origem, adia o próximo.
+   * está na tela e a aba está ativa. Um replay recente, de qualquer origem
+   * (hover incluído), adia o próximo: se o último desenho tem menos da metade
+   * de `replayEvery`, o disparo é pulado e reagendado a partir dele.
    */
   replayEvery?: number;
   children: ReactNode;
@@ -77,16 +78,18 @@ export function DrawGroup({
     // próximo disparo conta a partir do último desenho, inclusive o do hover.
     let timer = 0;
     let half: IntersectionObserver | undefined;
+    let stopVisibility: (() => void) | undefined;
     if (replayEvery) {
       let visible = false;
       const schedule = () => {
         window.clearTimeout(timer);
-        if (!visible) return;
+        // Aba oculta: não reagenda. O visibilitychange acorda de novo ao voltar.
+        if (!visible || document.hidden) return;
         const wait = drawnAt ? Math.max(drawnAt + replayEvery - Date.now(), 500) : replayEvery;
         timer = window.setTimeout(tick, wait);
       };
       const tick = () => {
-        if (!document.hidden) replay();
+        if (drawnAt && Date.now() - drawnAt >= replayEvery / 2) replay();
         schedule();
       };
       half = new IntersectionObserver(
@@ -97,11 +100,14 @@ export function DrawGroup({
         { threshold: 0.5 },
       );
       half.observe(el);
+      document.addEventListener("visibilitychange", schedule);
+      stopVisibility = () => document.removeEventListener("visibilitychange", schedule);
     }
 
     return () => {
       io.disconnect();
       half?.disconnect();
+      stopVisibility?.();
       window.clearTimeout(timer);
       el.removeEventListener("mouseenter", replay);
     };

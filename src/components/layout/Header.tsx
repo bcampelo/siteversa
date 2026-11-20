@@ -59,7 +59,6 @@ export function Header() {
               href={item.href}
               // O link Sobre é medido como header, como pede a spec (4.8)
               section={item.href === "/sobre" ? "header" : "header-nav"}
-              event="nav_click"
               ctaLabel={item.label}
               className="text-[0.9375rem] text-fog [transition:color_.22s] hover:text-chalk max-tab:hidden"
             >
