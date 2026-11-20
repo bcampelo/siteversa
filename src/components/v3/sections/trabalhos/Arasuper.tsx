@@ -1,4 +1,4 @@
-import { Burst, Engraving, Hand } from "@/components/v3/ink";
+import { Burst, Engraving, Hand, Parallax } from "@/components/v3/ink";
 import { CASES } from "@/lib/content-v3";
 import { cn } from "@/lib/utils";
 import { CaseFrame } from "./CaseFrame";
@@ -100,16 +100,18 @@ export function Arasuper() {
             {...BURST}
             className="top-[20px] right-[20px] h-[560px] w-[360px]"
           />
-          <Engraving
-            src="/v3/higia.webp"
-            alt={c.statueAlt}
-            width={360}
-            height={560}
-            className="absolute top-[20px] right-[20px] h-[560px] w-[360px]"
-          />
+          <Parallax>
+            <Engraving
+              src="/v3/higia.webp"
+              alt={c.statueAlt}
+              width={360}
+              height={560}
+              className="absolute top-[20px] right-[20px] h-[560px] w-[360px]"
+            />
+          </Parallax>
           <Hand
             delay={1}
-            className="absolute top-[530px] right-[80px] z-[3] text-[24px] whitespace-nowrap"
+            className="absolute top-[556px] right-[130px] z-[3] text-[24px] whitespace-nowrap"
           >
             {c.note}
           </Hand>
@@ -126,13 +128,15 @@ export function Arasuper() {
           <div className="relative h-[320px]">
             <div className="relative mx-auto h-[320px] w-[206px]">
               <Burst {...BURST} className="inset-0 h-full w-full" />
-              <Engraving
-                src="/v3/higia.webp"
-                alt={c.statueAlt}
-                width={360}
-                height={560}
-                className="absolute inset-0 h-full w-full"
-              />
+              <Parallax>
+                <Engraving
+                  src="/v3/higia.webp"
+                  alt={c.statueAlt}
+                  width={360}
+                  height={560}
+                  className="absolute inset-0 h-full w-full"
+                />
+              </Parallax>
             </div>
             <Hand
               delay={1}

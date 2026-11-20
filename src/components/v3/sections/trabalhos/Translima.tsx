@@ -2,6 +2,7 @@ import {
   Burst,
   Engraving,
   Hand,
+  Parallax,
   Pen,
   ScaleBox,
   cssVars,
@@ -35,7 +36,9 @@ const TEMP = "absolute z-[3] text-[24px] whitespace-nowrap";
 function Pecas({ compact }: { compact?: boolean }) {
   const anchor = compact ? "left-[274px]" : "left-1/2 -ml-[300px]";
   const adTop = compact ? "top-[30px]" : "top-[84px]";
+  // Desktop: a linha vai de x 150 a x 630, para não passar por baixo do Atlas
   const ruler = compact ? 60 : 150;
+  const rulerCut = compact ? 120 : 640;
 
   return (
     <>
@@ -65,16 +68,15 @@ function Pecas({ compact }: { compact?: boolean }) {
       >
         {c.temperatures.cold}
       </Hand>
-      {/* A referência põe `left: 50%` e o PNG aprovado mostra a nota começando no meio, então fica assim */}
       <Hand
         delay={0.6}
-        className={cn(TEMP, "left-1/2", compact ? "top-[415px]" : "top-[520px]")}
+        className={cn(TEMP, compact ? "top-[415px] left-1/2" : "top-[530px] left-[370px]")}
       >
         {c.temperatures.warm}
       </Hand>
       <Hand
         delay={0.8}
-        className={cn(TEMP, compact ? "top-[395px] right-[50px]" : "top-[500px] right-[110px]")}
+        className={cn(TEMP, compact ? "top-[395px] right-[50px]" : "top-[500px] left-[620px]")}
       >
         {c.temperatures.hot}
       </Hand>
@@ -84,7 +86,7 @@ function Pecas({ compact }: { compact?: boolean }) {
         style={{
           left: ruler,
           top: compact ? 415 : 520,
-          width: `calc(100% - ${ruler * 2}px)`,
+          width: `calc(100% - ${rulerCut}px)`,
         }}
         viewBox="0 0 800 40"
         preserveAspectRatio="none"
@@ -118,13 +120,15 @@ export function Translima() {
             dur={1.8}
             className="top-[20px] right-[20px] h-[560px] w-[360px]"
           />
-          <Engraving
-            src="/v3/atlas.webp"
-            alt={c.statueAlt}
-            width={360}
-            height={560}
-            className="absolute top-[20px] right-[20px] h-[560px] w-[360px]"
-          />
+          <Parallax>
+            <Engraving
+              src="/v3/atlas.webp"
+              alt={c.statueAlt}
+              width={360}
+              height={560}
+              className="absolute top-[20px] right-[20px] h-[560px] w-[360px]"
+            />
+          </Parallax>
           <Hand
             delay={1}
             className={cn(TEMP, "top-[30px] right-[70px]")}
@@ -152,13 +156,15 @@ export function Translima() {
                 dur={1.8}
                 className="inset-0 h-full w-full"
               />
-              <Engraving
-                src="/v3/atlas.webp"
-                alt={c.statueAlt}
-                width={360}
-                height={560}
-                className="absolute inset-0 h-full w-full"
-              />
+              <Parallax>
+                <Engraving
+                  src="/v3/atlas.webp"
+                  alt={c.statueAlt}
+                  width={360}
+                  height={560}
+                  className="absolute inset-0 h-full w-full"
+                />
+              </Parallax>
             </div>
             <Hand
               delay={1}

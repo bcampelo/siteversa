@@ -1,4 +1,4 @@
-import { Burst, Engraving, Hand, Pen, ScaleBox } from "@/components/v3/ink";
+import { Burst, Engraving, Hand, Parallax, Pen, ScaleBox } from "@/components/v3/ink";
 import { CASES } from "@/lib/content-v3";
 import { CaseFrame } from "./CaseFrame";
 
@@ -78,13 +78,15 @@ export function Sampaio() {
             dur={1.8}
             className="top-0 right-0 h-[600px] w-[440px]"
           />
-          <Engraving
-            src="/v3/justica.webp"
-            alt={c.statueAlt}
-            width={440}
-            height={600}
-            className="absolute top-0 right-0 h-[600px] w-[440px]"
-          />
+          <Parallax>
+            <Engraving
+              src="/v3/justica.webp"
+              alt={c.statueAlt}
+              width={440}
+              height={600}
+              className="absolute top-0 right-0 h-[600px] w-[440px]"
+            />
+          </Parallax>
           {/* Canto da landing: 80,70 na referência */}
           <div className="absolute top-[70px] left-[80px]">
             <Pecas />
@@ -109,13 +111,15 @@ export function Sampaio() {
               dur={1.8}
               className="inset-0 h-full w-full"
             />
-            <Engraving
-              src="/v3/justica.webp"
-              alt={c.statueAlt}
-              width={440}
-              height={600}
-              className="absolute inset-0 h-full w-full"
-            />
+            <Parallax>
+              <Engraving
+                src="/v3/justica.webp"
+                alt={c.statueAlt}
+                width={440}
+                height={600}
+                className="absolute inset-0 h-full w-full"
+              />
+            </Parallax>
           </div>
           <div className="px-3 pb-3">
             <ScaleBox w={760} h={520}>

@@ -1,0 +1,105 @@
+/* =========================================================================
+   Roadmap "Como trabalhamos"
+   -------------------------------------------------------------------------
+   Estado de base = tudo aceso. O estado apagado só existe com JS ativo
+   (classe `js` no <html>), sem `?still` e com movimento permitido, igual ao
+   ink.css. Sem JS, com reduced-motion ou com `?still` a página mostra o
+   roadmap completo sem precisar de regra de exceção.
+   ========================================================================= */
+
+/* Guia pontilhada por baixo e linha da caneta por cima, mesmo `d` */
+.rm-guide {
+  fill: none;
+  stroke: var(--color-line-light);
+  stroke-width: 2;
+  stroke-dasharray: 2 10;
+  stroke-linecap: round;
+}
+.rm-line {
+  fill: none;
+  stroke: var(--color-brand);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+/* Ponto de cada etapa (SVG no desktop, span no celular) */
+.rm-dot {
+  fill: var(--color-brand);
+  stroke: var(--color-brand);
+  stroke-width: 1.5;
+}
+.rm-mdot {
+  background: var(--color-brand);
+  border: 1.5px solid var(--color-brand);
+}
+
+/* Linha do celular: a guia é uma borda pontilhada, a tinta cresce em scaleY */
+.rm-mguide {
+  border-left: 2px dotted var(--color-line-light);
+}
+.rm-mline {
+  background: var(--color-brand);
+  transform-origin: top;
+}
+
+/* Ponta da caneta. Só aparece depois que o JS a posiciona (data-live). */
+.rm-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  margin: -40px 0 0 -4px;
+  pointer-events: none;
+  will-change: transform;
+}
+.rm-tip[data-live] {
+  display: block;
+}
+
+/* Ícones: traço ink de 1.6, um detalhe em brand (a tinta no papel claro) */
+.rm-ic .ink {
+  stroke: var(--color-ink);
+  stroke-width: 1.6;
+}
+.rm-ic .ink.brand {
+  stroke: var(--color-brand);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Etapa apagada até a caneta passar pelo ponto */
+  .js:not(.still) .rm-step .rm-body {
+    opacity: 0.18;
+    transition: opacity 0.5s ease;
+  }
+  .js:not(.still) .rm-step[data-on] .rm-body {
+    opacity: 1;
+  }
+
+  .js:not(.still) .rm-dot,
+  .js:not(.still) .rm-mdot {
+    transition:
+      fill 0.3s ease,
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      stroke 0.3s ease;
+  }
+  .js:not(.still) .rm-dot:not([data-on]) {
+    fill: var(--color-chalk);
+    stroke: var(--color-ink);
+  }
+  .js:not(.still) .rm-mdot:not([data-on]) {
+    background: var(--color-chalk);
+    border-color: var(--color-ink);
+  }
+
+  /* O ícone se desenha quando a etapa acende. Não usa [data-drawn]: quem
+     dispara aqui é a caneta, não o observer de um DrawGroup. */
+  .js:not(.still) .rm-step[data-on] .pen {
+    animation: pen var(--dur, 1s) cubic-bezier(0.65, 0, 0.35, 1) var(--d, 0.15s)
+      forwards;
+  }
+  .js:not(.still) .rm-step[data-on] .pen.dashed {
+    animation: rise var(--dur, 1s) cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0.15s)
+      forwards;
+  }
+}
