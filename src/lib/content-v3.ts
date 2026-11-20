@@ -1,0 +1,272 @@
+/**
+ * Toda a copy da home v3, letra por letra como na referência
+ * (site-v3/referencia-desktop.html). Os componentes de seção só leem daqui,
+ * nada de texto escrito direto no JSX.
+ *
+ * Os textos dentro das peças dos clientes (card do Instagram do Sampaio,
+ * anúncios da TransLima, artes da Arasuper) são ilustrativos até o Breno
+ * confirmar. Os `*Label` são descrições para leitor de tela dos palcos
+ * desenhados, que ficam com aria-hidden por dentro.
+ */
+
+/** Título com um trecho sublinhado à caneta. */
+export type UnderlinedTitle = {
+  before: string;
+  underlined: string;
+  after?: string;
+};
+
+/** Citação em latim à mão, com a tradução e a fonte embaixo. */
+export type HandQuote = { latin: string; translation: string };
+
+export const CTA_LABEL = "Falar com a Versa";
+
+/* ---------------------------------------------------------------- Hero -- */
+
+export const HERO = {
+  /** As duas primeiras linhas do título. A terceira vem de `lastLine`. */
+  lines: ["Pior que falarem", "da sua empresa"],
+  /** "é ninguém falar." com "ninguém" circulado à mão. */
+  lastLine: { before: "é ", circled: "ninguém", after: " falar." },
+  cite: "Oscar Wilde, O Retrato de Dorian Gray, 1890",
+  lede: "Social media, tráfego pago e sites para empresas de Rio Branco.",
+  cta: CTA_LABEL,
+  ctaNote: "a conversa é no WhatsApp",
+  stageLabel:
+    "Hermes de mármore falando num megafone, com as ondas de som desenhadas virando uma mensagem",
+  hermesAlt: "Busto de mármore de Hermes falando num megafone",
+  message: "Oi! Vi o anúncio de vocês.",
+  note: "a mensagem certa vira conversa",
+} as const;
+
+/* ------------------------------------------------------------ Serviços -- */
+
+export const SERVICOS = {
+  quote: {
+    latin: "esse est percipi",
+    translation: "ser é ser percebido. George Berkeley, 1710",
+  } satisfies HandQuote,
+  title: {
+    before: "Do primeiro post ao ",
+    underlined: "primeiro cliente.",
+  } satisfies UnderlinedTitle,
+  lede: "Toda peça começa como rascunho.",
+  /** Só de 1101px para cima. No toque não existe hover. */
+  hoverHint: "Passe o mouse para ver de novo.",
+  items: {
+    social: {
+      num: "01",
+      title: "Social media",
+      text: "Conteúdo com função antes da arte, para quem compra de você aqui.",
+      stageLabel:
+        "Rascunho de um post do Instagram que vira a peça pronta, com a promessa na capa",
+      tag: "promessa na capa",
+      post: {
+        caption: "Abra seu Instagram. Conte os últimos 9 posts.",
+        handle: "@helloversa",
+      },
+    },
+    trafego: {
+      num: "02",
+      title: "Tráfego pago",
+      text: "Anúncio no Meta e no Google, com relatório todo mês e sem mexida diária.",
+      stageLabel:
+        "Rascunho de um gráfico de anúncio que vira a peça pronta, com a curva de aprendizado da campanha subindo",
+      tag: "sem mexer todo dia",
+      chart: {
+        title: "Seu anúncio não está caro. Está recomeçando.",
+        label: "Gráfico ilustrativo de aprendizado da campanha",
+      },
+    },
+    sites: {
+      num: "03",
+      title: "Sites e landing pages",
+      text: "Página rápida que responde a pergunta que você digita toda semana.",
+      stageLabel:
+        "Rascunho de uma página que vira a peça pronta, com um botão de WhatsApp e a mensagem que chega",
+      tag: "um botão só",
+      page: {
+        title: "A pergunta que virou página.",
+        text: "Horário, preço e endereço, respondidos antes da mensagem.",
+        button: "Falar no WhatsApp",
+      },
+      bubble: "Oi! Vi o site de vocês.",
+    },
+  },
+} as const;
+
+/* ----------------------------------------------------------- Trabalhos -- */
+
+export const TRABALHOS = {
+  title: {
+    before: "Três clientes daqui, ",
+    underlined: "três caras.",
+  } satisfies UnderlinedTitle,
+  lede: "Escritório, transportadora e farmácia de Rio Branco.",
+} as const;
+
+export const CASES = {
+  sampaio: {
+    name: "Sampaio & Gonçalves",
+    description: "Social media e landing page do escritório.",
+    /** Sem URL confirmada. O link "Ver ao vivo" só renderiza se isto tiver valor. */
+    url: "",
+    linkLabel: "Ver ao vivo",
+    stageLabel:
+      "Landing page e post do Instagram do escritório Sampaio & Gonçalves, ao lado da estátua da Justiça",
+    statueAlt: "Estátua da Justiça de mármore segurando a balança",
+    landing: {
+      brand: "Sampaio & Gonçalves",
+      title: "Sampaio & Gonçalves Advogados Associados",
+      button: "Fale com o escritório",
+    },
+    card: {
+      tag: "Direito do consumidor",
+      text: "Seus direitos, em linguagem simples.",
+    },
+    note: "sério, sem juridiquês",
+  },
+  translima: {
+    name: "TransLima Express",
+    description:
+      "Tráfego pago no Meta, um anúncio por temperatura de público.",
+    stageLabel:
+      "Três anúncios da TransLima Express, um para público frio, um para morno e um para quente, ao lado do Atlas de mármore",
+    statueAlt: "Atlas de mármore carregando uma caixa de papelão",
+    note: "a carga é o cliente",
+    /** Esquerda e direita abrem em leque; o do meio é o principal. */
+    ads: {
+      left: { title: "Sua carga chega.", button: "Chamar no WhatsApp" },
+      right: { title: "Sua carga em boas mãos.", button: "Chamar no WhatsApp" },
+      center: {
+        brand: "TransLima Express",
+        title: "Entrega sem dor de cabeça.",
+        button: "Chamar no WhatsApp",
+      },
+    },
+    temperatures: { cold: "frio", warm: "morno", hot: "quente" },
+  },
+  arasuper: {
+    name: "Drogaria Arasuper",
+    description: "Artes e conteúdo para a farmácia, nas cores da loja.",
+    stageLabel:
+      "Artes da Drogaria Arasuper passando em colunas, ao lado da Hígia de mármore",
+    statueAlt:
+      "Hígia de mármore, deusa da saúde, segurando um frasco de remédio",
+    note: "o balcão de sempre, no feed",
+    pause: "Pausar",
+    resume: "Continuar",
+    /**
+     * Três colunas de três artes; cada coluna é repetida uma vez no DOM para o
+     * laço de 30s fechar sem salto. `tone` escolhe o fundo (green, yellow,
+     * white), `marginTop` desloca a coluna em px e `reverse` inverte o sentido.
+     */
+    columns: [
+      {
+        marginTop: 0,
+        reverse: false,
+        tiles: [
+          { tone: "green", text: "Ofertas da semana" },
+          { tone: "white", text: "Tire suas dúvidas no balcão" },
+          { tone: "yellow", text: "Fale no WhatsApp" },
+        ],
+      },
+      {
+        marginTop: -120,
+        reverse: true,
+        tiles: [
+          { tone: "yellow", text: "Cuidado com a pele" },
+          { tone: "green", text: "Unidade Betel" },
+          { tone: "white", text: "Dica da farmacêutica" },
+        ],
+      },
+      {
+        marginTop: -60,
+        reverse: false,
+        tiles: [
+          { tone: "white", text: "Mamãe e bebê" },
+          { tone: "yellow", text: "Ofertas da semana" },
+          { tone: "green", text: "Fale no WhatsApp" },
+        ],
+      },
+    ],
+    tileBrand: "Drogaria Arasuper",
+  },
+} as const;
+
+/* ------------------------------------------------------ Como funciona -- */
+
+export const COMO = {
+  title: {
+    before: "Você fala com ",
+    underlined: "quem faz",
+    after: " o trabalho.",
+  } satisfies UnderlinedTitle,
+  lede: "Sem atendente no meio e sem contrato de fidelidade.",
+  handAlt: "Mão de mármore segurando uma caneta-tinteiro",
+  steps: [
+    {
+      num: "01",
+      title: "Conversa",
+      text: "Você conta o que vende e para quem.",
+    },
+    {
+      num: "02",
+      title: "Proposta",
+      text: "Escopo e valor fechados, por escrito.",
+    },
+    {
+      num: "03",
+      title: "Execução",
+      text: "Entrega, medição e ajuste.",
+    },
+  ],
+  back: "relatório todo mês, e volta para a conversa",
+} as const;
+
+/* ---------------------------------------------------------- Fechamento -- */
+
+export const FECHAMENTO = {
+  quote: {
+    latin: "exegi monumentum aere perennius",
+    translation:
+      "ergui um monumento mais duradouro que o bronze. Horácio, Odes III.30",
+  } satisfies HandQuote,
+  /** Duas linhas, com quebra entre elas. */
+  title: ["Me conta o que", "você vende."],
+  text: "Quem responde a mensagem é quem vai fazer o trabalho.",
+  cta: CTA_LABEL,
+  /** O busto é decorativo: alt vazio. */
+  bustAlt: "",
+  sign: { name: "Breno", role: "Fundador da Versa, Rio Branco" },
+} as const;
+
+/* -------------------------------------------------------------- Rodapé -- */
+
+export const RODAPE = {
+  /** Mesmos links da referência. O primeiro grupo é o que ela mostra. */
+  links: [
+    { label: "Serviços", href: "/#servicos" },
+    { label: "Trabalhos", href: "/#trabalhos" },
+    { label: "Como funciona", href: "/#como" },
+  ],
+  instagram: "Instagram",
+  /** Rotas fora da home, que continuam acessíveis pelo rodapé. */
+  more: [
+    { label: "Diagnóstico gratuito", href: "/diagnostico" },
+    { label: "Ferramentas", href: "/ferramentas" },
+    { label: "Privacidade e dados", href: "/privacidade" },
+  ],
+  copyright: "Versa",
+} as const;
+
+/* ----------------------------------------------------------- 404 e OG -- */
+
+/** Única copy nova do projeto, aprovada no plano (seção 6.3). */
+export const NOT_FOUND = {
+  title: "Essa página não chegou.",
+  text: "O endereço mudou ou nunca existiu.",
+  button: "Voltar ao início",
+  note: "a carga é o cliente, a página não",
+  statueAlt: "Atlas de mármore carregando uma caixa de papelão",
+} as const;

@@ -38,12 +38,11 @@ export const SITE = {
     instagram: "https://instagram.com/helloversa",
   },
 
+  // Âncoras da home v3. As outras rotas continuam acessíveis por URL e pelo rodapé.
   nav: [
     { label: "Serviços", href: "/#servicos" },
     { label: "Trabalhos", href: "/#trabalhos" },
-    { label: "Investimento", href: "/#investimento" },
-    { label: "Método", href: "/#processo" },
-    { label: "Dúvidas", href: "/#faq" },
+    { label: "Como funciona", href: "/#como" },
   ],
 } as const;
 
@@ -59,6 +58,8 @@ export const CTA = {
   primaryShort: "Diagnóstico gratuito",
   secondary: "Ver trabalhos",
   whatsapp: "Falar no WhatsApp",
+  /** CTA principal da home v3: leva ao WhatsApp, com origem por seção. */
+  falar: "Falar com a Versa",
 } as const;
 
 /** Destino do CTA principal do site. Um lugar só para trocar depois. */
