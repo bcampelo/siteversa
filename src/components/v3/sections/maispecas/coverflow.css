@@ -1,0 +1,192 @@
+/*
+ * Coverflow da Lastro. As variáveis --x --z --r --s --o --b --zi de cada item
+ * vêm inline do Coverflow.tsx. O passo horizontal (--step) mora aqui para o
+ * celular nascer com a posição certa, sem salto na hidratação.
+ * Só transform, opacity e filter transitam: nunca `all`.
+ */
+
+.cf {
+  position: relative;
+}
+
+.cf:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 8px;
+  border-radius: 24px;
+}
+
+.cf-stage {
+  --step: 230px;
+  position: relative;
+  height: 520px;
+  perspective: 1400px;
+  /* pan-y: o dedo na vertical rola a página, na horizontal arrasta o carrossel */
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+
+.cf-stage[data-dragging="true"] {
+  cursor: grabbing;
+}
+
+.cf-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 320px;
+  aspect-ratio: 4 / 5;
+  margin: -200px 0 0 -160px;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--color-ink-3);
+  cursor: pointer;
+  transform: translate3d(var(--x), 0, var(--z)) rotateY(var(--r))
+    scale(var(--s));
+  opacity: var(--o);
+  filter: blur(var(--b));
+  z-index: var(--zi);
+  box-shadow: 0 30px 60px -20px
+    color-mix(in oklab, var(--color-ink) 70%, transparent);
+  transition-property: transform, opacity, filter;
+  transition-duration: 0.6s;
+  transition-timing-function: var(--ease-versa, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.cf-item[data-far="true"] {
+  pointer-events: none;
+}
+
+.cf-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+/* Reflexo de vidro que acompanha o item */
+.cf-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    color-mix(in oklab, var(--color-chalk) 16%, transparent),
+    transparent 38%
+  );
+  box-shadow: inset 0 0 0 1px
+    color-mix(in oklab, var(--color-chalk) 22%, transparent);
+}
+
+.cf-dock {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: max-content;
+  max-width: 100%;
+  margin: 8px auto 0;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-chalk) 10%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-chalk) 22%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.cf-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in oklab, var(--color-chalk) 22%, transparent);
+  background: transparent;
+  color: var(--color-chalk);
+  font: inherit;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition-property: background-color, scale;
+  transition-duration: 0.2s;
+  transition-timing-function: var(--ease-versa, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.cf-btn:hover {
+  background: color-mix(in oklab, var(--color-chalk) 10%, transparent);
+}
+
+.cf-btn:active {
+  scale: 0.94;
+}
+
+.cf-dots {
+  display: flex;
+}
+
+/* Área de toque de 24px (WCAG 2.5.8) em volta do ponto visível de 8px */
+.cf-dot {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.cf-dot::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-fog);
+  opacity: 0.5;
+  transition-property: opacity, background-color;
+  transition-duration: 0.2s;
+  transition-timing-function: var(--ease-versa, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.cf-dot[aria-current="true"]::before {
+  background: var(--color-accent);
+  opacity: 1;
+}
+
+.cf-caption {
+  margin: 16px 0 0;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--color-fog);
+}
+
+@media (max-width: 640px) {
+  .cf-stage {
+    --step: 150px;
+    height: 430px;
+  }
+
+  .cf-item {
+    width: 240px;
+    margin: -150px 0 0 -120px;
+  }
+}
+
+/* Sem animação: o item vai direto para a posição nova */
+@media (prefers-reduced-motion: reduce) {
+  .cf-item,
+  .cf-btn,
+  .cf-dot::before {
+    transition: none;
+  }
+}
+
+html.still .cf-item,
+html.still .cf-btn,
+html.still .cf-dot::before {
+  transition: none;
+}

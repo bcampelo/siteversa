@@ -194,6 +194,83 @@ export const CASES = {
   },
 } as const;
 
+/* --------------------------------------------------------- Mais peças -- */
+
+/**
+ * Seção depois dos cases: artes da Lastro e animações da Join Club.
+ * Sem métrica, depoimento ou promessa de resultado (rodada 3, seção 2).
+ * A legenda de cada arte repete o texto que está dentro da própria imagem.
+ */
+export const MAIS_PECAS = {
+  title: "Mais peças.",
+  lede: "Artes e animações de outros projetos.",
+  lastro: {
+    name: "Lastro",
+    line: "Hamburgueria. Algumas artes.",
+    label: "Artes da Lastro",
+    prev: "Arte anterior",
+    next: "Próxima arte",
+    /** Rótulo dos pontos de navegação, com o número da arte. */
+    goTo: "Ir para a arte",
+    /** "Arte 2 de 6": nome de cada item para leitor de tela. */
+    item: "Arte",
+    of: "de",
+    arts: [
+      {
+        src: "/v3/lastro/lastro-01.webp",
+        caption: "Duas carnes. As duas importam.",
+        alt: "Hambúrguer duplo com queijo e picles. Texto: Duas carnes. As duas importam.",
+      },
+      {
+        src: "/v3/lastro/lastro-02.webp",
+        caption: "Olha o que tem no meio.",
+        alt: "Hambúrguer aberto em camadas sobre fundo amarelo. Texto: Olha o que tem no meio.",
+      },
+      {
+        src: "/v3/lastro/lastro-03.webp",
+        caption: "O segredo faz barulho.",
+        alt: "Carne na chapa com espátula. Texto: O segredo faz barulho.",
+      },
+      {
+        src: "/v3/lastro/lastro-04.webp",
+        caption: "Ainda bem que eu vim.",
+        alt: "Mulher sorrindo com um hambúrguer na mão. Texto: Ainda bem que eu vim.",
+      },
+      {
+        src: "/v3/lastro/lastro-05.webp",
+        caption: "Só mais uma.",
+        alt: "Mão pegando uma batata frita. Texto: Só mais uma.",
+      },
+      {
+        src: "/v3/lastro/lastro-06.webp",
+        caption: "Pede o teu. A batata é nossa.",
+        alt: "Amigos à mesa dividindo batatas. Texto: Pede o teu. A batata é nossa.",
+      },
+    ],
+  },
+  joinClub: {
+    /** Vídeos mudos e em laço: o rótulo descreve o quadro para leitor de tela. */
+    tv: {
+      caption: "Join Club, animações para TV.",
+      label: "Animação da Join Club para TV, em laço e sem som",
+      webm: "/video/joinclub-tv.webm",
+      mp4: "/video/joinclub-tv.mp4",
+      poster: "/v3/joinclub-tv.webp",
+      width: 1280,
+      height: 720,
+    },
+    stories: {
+      caption: "Join Club, stories.",
+      label: "Animação da Join Club para stories, em laço e sem som",
+      webm: "/video/joinclub-stories.webm",
+      mp4: "/video/joinclub-stories.mp4",
+      poster: "/v3/joinclub-stories.webp",
+      width: 720,
+      height: 1280,
+    },
+  },
+} as const;
+
 /* ------------------------------------------------------ Como funciona -- */
 
 export const COMO = {
