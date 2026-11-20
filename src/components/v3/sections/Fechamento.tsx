@@ -43,13 +43,13 @@ export function Fechamento() {
           </small>
         </Hand>
 
-        <h2 className="relative font-display text-[min(56px,calc((100vw-48px)/6.3))] leading-[0.94] font-medium tracking-[-0.05em] text-balance [overflow-wrap:break-word] tab:text-[88px] desk:text-[120px]">
+        <h2 className="relative mt-6 font-display text-[min(56px,calc((100vw-48px)/6.3))] leading-[0.94] font-medium tracking-[-0.05em] text-balance [overflow-wrap:break-word] tab:text-[88px] desk:text-[120px]">
           {FECHAMENTO.title[0]}
           <br />
           {FECHAMENTO.title[1]}
         </h2>
 
-        <p className="relative mt-8 mb-6 text-pretty text-fog tab:mt-10">
+        <p className="relative mt-8 mb-6 text-[17px] leading-[1.55] text-pretty text-fog tab:mt-10">
           {FECHAMENTO.text}
         </p>
 

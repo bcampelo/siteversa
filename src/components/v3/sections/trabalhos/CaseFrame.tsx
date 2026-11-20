@@ -70,7 +70,7 @@ export function CaseFrame({
           <strong className="block font-display text-[28px] leading-[1.55] font-medium tracking-[-0.02em] tab:inline">
             {name}
           </strong>
-          <span className="block text-fog tab:ml-4 tab:inline">
+          <span className="block text-[17px] leading-[1.55] text-fog tab:ml-4 tab:inline">
             {description}
           </span>
         </div>

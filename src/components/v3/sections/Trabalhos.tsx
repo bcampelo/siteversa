@@ -17,7 +17,7 @@ export function Trabalhos() {
               {TRABALHOS.title.underlined}
             </Underline>
           </h2>
-          <p className="max-w-[40ch] text-fog">{TRABALHOS.lede}</p>
+          <p className="max-w-[40ch] text-[17px] leading-[1.55] text-fog">{TRABALHOS.lede}</p>
         </DrawGroup>
 
         <Sampaio />

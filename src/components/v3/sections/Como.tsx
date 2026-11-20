@@ -83,7 +83,7 @@ export function Como() {
             </Underline>
             {COMO.title.after}
           </h2>
-          <p className="max-w-[40ch] text-muted">{COMO.lede}</p>
+          <p className="max-w-[40ch] text-[17px] leading-[1.55] text-muted">{COMO.lede}</p>
         </DrawGroup>
 
         <DrawGroup>
