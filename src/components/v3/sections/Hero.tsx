@@ -156,6 +156,7 @@ export function Hero() {
               {/* enter={false}: já visível no primeiro quadro, como a gravura estática da referência */}
               <Engraving
                 src="/v3/hermes.webp"
+                mobileSrc="/v3/hermes-m.webp"
                 alt={HERO.hermesAlt}
                 width={600}
                 height={740}
