@@ -41,7 +41,9 @@ export function Footer() {
             <TrackedLink
               key={item.href}
               href={item.href}
-              section="footer-nav"
+              // O link Sobre é medido como footer, como pede a spec (4.8)
+              section={item.href === "/sobre" ? "footer" : "footer-nav"}
+              event="nav_click"
               ctaLabel={item.label}
               className={link}
             >

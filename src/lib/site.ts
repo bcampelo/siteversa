@@ -38,11 +38,12 @@ export const SITE = {
     instagram: "https://instagram.com/helloversa",
   },
 
-  // Âncoras da home v3. As outras rotas continuam acessíveis por URL e pelo rodapé.
+  // Âncoras da home v3 e a página Sobre. As outras rotas continuam acessíveis por URL e pelo rodapé.
   nav: [
     { label: "Serviços", href: "/#servicos" },
     { label: "Trabalhos", href: "/#trabalhos" },
-    { label: "Como funciona", href: "/#como" },
+    { label: "Como trabalhamos", href: "/#como" },
+    { label: "Sobre", href: "/sobre" },
   ],
 } as const;
 
