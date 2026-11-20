@@ -38,8 +38,8 @@ export function Servicos() {
           </div>
           <p className="max-w-[40ch] text-fog">
             {SERVICOS.lede}
-            {/* No toque não existe hover, então a dica some abaixo de 1101px */}
-            <span className="max-desk:hidden"> {SERVICOS.hoverHint}</span>
+            {/* No toque não existe hover: some abaixo de 1101px e em qualquer tela sem hover (tablet em paisagem) */}
+            <span className="max-desk:hidden [@media(hover:none)]:hidden"> {SERVICOS.hoverHint}</span>
           </p>
         </DrawGroup>
 
