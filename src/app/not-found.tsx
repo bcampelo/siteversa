@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowIcon, Button } from "@/components/ui/Button";
-import { DIAGNOSTICO_HREF } from "@/lib/site";
+import { Button } from "@/components/ui/Button";
+import { Burst, DrawGroup, Engraving, Hand } from "@/components/v3/ink";
+import { NOT_FOUND } from "@/lib/content-v3";
 
 export const metadata: Metadata = {
   title: "Página não encontrada",
@@ -11,60 +11,66 @@ export const metadata: Metadata = {
 /**
  * 404.
  *
- * Uma 404 padrão é um beco sem saída, e beco sem saída em site que recebe
- * tráfego pago é verba jogada fora. Esta página assume que quem chegou aqui
- * errou o caminho, não errou a intenção, e oferece os dois destinos que
- * resolvem quase tudo.
+ * Quem chegou aqui errou o caminho, não a intenção. A página diz isso em
+ * uma frase e devolve para o início, com o Atlas carregando a caixa que não
+ * chegou. Mesma linguagem da home: gravura, raios e nota à mão.
  */
 export default function NotFound() {
   return (
-    <section className="relative flex min-h-svh items-center overflow-hidden py-32">
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <div className="bg-grid absolute inset-0 opacity-40 [mask-image:radial-gradient(60%_50%_at_50%_40%,black,transparent)]" />
-        <div className="halo absolute left-1/2 top-1/3 size-[40rem] max-w-[150vw] -translate-x-1/2 blur-[90px]" />
-      </div>
-
-      <div className="shell relative">
-        <div className="max-w-2xl">
-          <p className="font-mono text-eyebrow text-brand-soft/70">erro 404</p>
-          <h1 className="text-hero mt-6 max-w-[16ch] text-balance">
-            Esta página{" "}
-            <span className="text-gradient">não existe.</span>
-          </h1>
-          <p className="text-lede mt-7 max-w-[46ch] text-fog">
-            Ou saiu do ar, ou o link veio torto. Nenhum dos dois é culpa sua.
-          </p>
-
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Button
-              href={DIAGNOSTICO_HREF}
-              size="lg"
-              section="404"
-              ctaLabel="Diagnóstico"
-            >
-              Rodar o diagnóstico gratuito
-              <ArrowIcon />
-            </Button>
-            <Button
-              href="/"
-              variant="ghost"
-              size="lg"
-              section="404"
-              ctaLabel="Início"
-            >
-              Voltar para o início
-            </Button>
-          </div>
-
-          <p className="mt-8 text-[0.8125rem] text-fog-dim">
-            Procurando alguma ferramenta?{" "}
-            <Link href="/ferramentas" className="link-underline text-chalk">
-              Estão todas aqui
-            </Link>
-            .
-          </p>
+    <section className="relative flex min-h-svh items-center overflow-clip py-32">
+      <DrawGroup className="wrap relative w-full">
+        {/* Atlas à direita; no celular fica atrás do texto, mais apagado */}
+        <div className="pointer-events-none absolute top-1/2 right-[-60px] h-[560px] w-[360px] -translate-y-1/2 opacity-40 tab:right-0 tab:opacity-100">
+          <Burst
+            viewBox="0 0 360 560"
+            cx={180}
+            cy={190}
+            r={150}
+            n={72}
+            min={20}
+            max={90}
+            seed={17}
+            opacity={0.45}
+            delay={0.2}
+            dur={1.8}
+            className="inset-0 h-full w-full"
+          />
+          <Engraving
+            src="/v3/atlas.webp"
+            alt={NOT_FOUND.statueAlt}
+            width={360}
+            height={560}
+            className="absolute inset-0 h-full w-full"
+          />
+          <Hand
+            delay={1}
+            className="absolute top-[-4px] right-[10px] z-[3] text-[22px] whitespace-nowrap max-tab:hidden"
+          >
+            {NOT_FOUND.note}
+          </Hand>
         </div>
-      </div>
+
+        <div className="relative max-w-[640px]">
+          <h1 className="max-w-[12ch] font-display text-[46px] leading-none font-medium tracking-[-0.04em] text-balance [overflow-wrap:break-word] tab:text-[72px] tab:leading-[0.98]">
+            {NOT_FOUND.title}
+          </h1>
+          <p className="mt-6 mb-10 max-w-[34ch] text-[20px] text-fog">
+            {NOT_FOUND.text}
+          </p>
+          <Button
+            href="/"
+            variant="ghost"
+            section="404"
+            ctaLabel={NOT_FOUND.button}
+          >
+            {NOT_FOUND.button}
+          </Button>
+          {/* No celular a nota fica aqui, porque a do Atlas está escondida */}
+          <Hand as="p" delay={1} className="mt-8 text-[22px] tab:hidden">
+            {NOT_FOUND.note}
+          </Hand>
+        </div>
+      </DrawGroup>
     </section>
   );
 }
