@@ -36,7 +36,7 @@ export function Servicos() {
               </Underline>
             </h2>
           </div>
-          <p className="max-w-[40ch] text-fog">
+          <p className="max-w-[40ch] text-[17px] leading-[1.55] text-fog">
             {SERVICOS.lede}
             {/* No toque não existe hover: some abaixo de 1101px e em qualquer tela sem hover (tablet em paisagem) */}
             <span className="max-desk:hidden [@media(hover:none)]:hidden"> {SERVICOS.hoverHint}</span>
@@ -54,7 +54,7 @@ export function Servicos() {
                 <h3 className="mb-4 font-display text-[32px] leading-none font-medium tracking-[-0.04em] text-balance [overflow-wrap:break-word] tab:text-[44px]">
                   {title}
                 </h3>
-                <p className="max-w-[34ch] text-fog">{text}</p>
+                <p className="max-w-[34ch] text-[17px] leading-[1.55] text-fog">{text}</p>
               </div>
               <Palco />
             </article>

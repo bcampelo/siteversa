@@ -95,7 +95,8 @@ export function Hero() {
           </Hand>
 
           <p
-            className="settle mt-6 mb-10 max-w-[34ch] text-[20px] text-fog"
+            // No tablet o Hermes sobreposto cobre o resto da linha; 270px deixa o lede inteiro ao lado do peito
+            className="settle mt-6 mb-10 max-w-[34ch] text-[20px] text-fog tab:max-w-[270px] min-[1000px]:max-w-[34ch]"
             style={settle(0.3)}
           >
             {HERO.lede}
