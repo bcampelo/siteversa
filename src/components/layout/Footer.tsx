@@ -42,7 +42,7 @@ export function Footer() {
               key={item.href}
               href={item.href}
               // O link Sobre é medido como footer, como pede a spec (4.8)
-              section={item.href === "/sobre" ? "footer" : "footer-nav"}
+              section={item.href === "/#sobre" ? "footer" : "footer-nav"}
               ctaLabel={item.label}
               className={link}
             >

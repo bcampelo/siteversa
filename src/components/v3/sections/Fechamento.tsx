@@ -68,7 +68,7 @@ export function Fechamento() {
         </Button>
 
         {/*
-          A assinatura é o link para /sobre. O clip-path do .write-in corta o
+          A assinatura é o link para a seção Sobre (/#sobre). O clip-path do .write-in corta o
           contorno de foco, então o link é a caixa de fora e o .write-in fica
           dentro, só com o texto. A rotação também fica no link.
           O evento `about_open` não existe em VersaEvent (analytics.ts não

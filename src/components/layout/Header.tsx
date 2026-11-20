@@ -54,6 +54,22 @@ export function Header() {
     alvos.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, [pathname]);
+  // Sobre é uma âncora da home, então "ativo" quer dizer que a seção está no
+  // meio da tela. O estado leva a rota, pelo mesmo motivo do `cobertas`.
+  const [sobre, setSobre] = useState({ path: pathname, ativo: false });
+  useEffect(() => {
+    const el = document.getElementById("sobre");
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => setSobre({ path: pathname, ativo: e.isIntersecting }),
+      // Faixa de 10% no centro da tela: só a seção que ocupa o meio fica ativa
+      { rootMargin: "-45% 0px -45% 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [pathname]);
+  const sobreAtivo = sobre.path === pathname && sobre.ativo;
+
   const cta = cobertas.path === pathname && cobertas.ids.length > 0 ? "oculto" : "visivel";
 
   return (
@@ -85,11 +101,11 @@ export function Header() {
               key={item.href}
               href={item.href}
               // O link Sobre é medido como header, como pede a spec (4.8)
-              section={item.href === "/sobre" ? "header" : "header-nav"}
+              section={item.href === "/#sobre" ? "header" : "header-nav"}
               ctaLabel={item.label}
-              // Só rotas inteiras podem estar ativas; as âncoras da home não
-              aria-current={item.href === pathname ? "page" : undefined}
-              className="text-[0.9375rem] text-fog [transition:color_.22s] hover:text-chalk aria-[current=page]:text-chalk max-tab:hidden"
+              // Só o Sobre acompanha a rolagem; as outras âncoras não ficam em destaque
+              aria-current={item.href === "/#sobre" && sobreAtivo ? "location" : undefined}
+              className="text-[0.9375rem] text-fog [transition:color_.22s] hover:text-chalk aria-[current=location]:text-chalk max-tab:hidden"
             >
               {item.label}
             </TrackedLink>

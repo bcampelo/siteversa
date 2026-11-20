@@ -329,11 +329,11 @@ export const FECHAMENTO = {
   cta: CTA_LABEL,
   /** O busto é decorativo: alt vazio. */
   bustAlt: "",
-  /** A assinatura é link para /sobre: "Breno" e, embaixo, o convite. */
+  /** A assinatura é link para a seção Sobre da home: "Breno" e, embaixo, o convite. */
   sign: {
     name: "Breno",
     link: "Conheça quem faz o trabalho",
-    href: "/sobre",
+    href: "/#sobre",
   },
 } as const;
 
@@ -395,7 +395,7 @@ export const RODAPE = {
     { label: "Serviços", href: "/#servicos" },
     { label: "Trabalhos", href: "/#trabalhos" },
     { label: "Como trabalhamos", href: "/#como" },
-    { label: "Sobre", href: "/sobre" },
+    { label: "Sobre", href: "/#sobre" },
   ],
   instagram: "Instagram",
   /** Rotas fora da home, que continuam acessíveis pelo rodapé. */
