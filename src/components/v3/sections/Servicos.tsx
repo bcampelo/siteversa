@@ -1,4 +1,4 @@
-import { DrawGroup, Hand, Underline } from "@/components/v3/ink";
+import { DrawGroup, Hand, RevealTitle, Underline } from "@/components/v3/ink";
 import { SERVICOS } from "@/lib/content-v3";
 import { PalcoSites } from "./servicos/PalcoSites";
 import { PalcoSocial } from "./servicos/PalcoSocial";
@@ -29,17 +29,15 @@ export function Servicos() {
                 {SERVICOS.quote.translation}
               </small>
             </Hand>
-            <h2 className="max-w-[16ch] font-display text-[40px] leading-none font-medium tracking-[-0.04em] text-balance [overflow-wrap:break-word] tab:text-[64px]">
+            <RevealTitle className="max-w-[16ch] font-display text-[40px] leading-none font-medium tracking-[-0.04em] text-balance [overflow-wrap:break-word] tab:text-[64px]">
               {SERVICOS.title.before}
               <Underline d="M3 13 C 70 5, 160 16, 297 7">
                 {SERVICOS.title.underlined}
               </Underline>
-            </h2>
+            </RevealTitle>
           </div>
           <p className="max-w-[40ch] text-[17px] leading-[1.55] text-fog">
             {SERVICOS.lede}
-            {/* No toque não existe hover: some abaixo de 1101px e em qualquer tela sem hover (tablet em paisagem) */}
-            <span className="max-desk:hidden [@media(hover:none)]:hidden"> {SERVICOS.hoverHint}</span>
           </p>
         </DrawGroup>
 

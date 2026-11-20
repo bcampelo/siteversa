@@ -9,6 +9,7 @@ import {
 } from "@/components/v3/ink";
 import { CTA_LABEL, HERO } from "@/lib/content-v3";
 import { whatsappUrl } from "@/lib/whatsapp";
+import { HermesFollow } from "./hero/HermesFollow";
 
 /**
  * Raios que saem do megafone do Hermes (viewBox 0 0 600 740). A geometria é
@@ -153,36 +154,39 @@ export function Hero() {
                   WebkitMaskImage: HALO_MASK,
                 }}
               />
-              {/* enter={false}: já visível no primeiro quadro, como a gravura estática da referência */}
-              <Engraving
-                src="/v3/hermes.webp"
-                mobileSrc="/v3/hermes-m.webp"
-                alt={HERO.hermesAlt}
-                width={600}
-                height={740}
-                priority
-                enter={false}
-                className="absolute inset-0 h-full w-full"
-              />
-              <svg
-                className="pointer-events-none absolute inset-0 h-full w-full overflow-visible [transform:translate(-38px,-14px)]"
-                viewBox="0 0 600 740"
-                aria-hidden="true"
-              >
-                {ONDAS.map((d, i) => (
-                  <Pen key={d} d={d} thin delay={Math.round((0.8 + i * 0.03) * 100) / 100} dur={0.5} />
-                ))}
-                <Pen
-                  d="M640 236 C 650 200, 620 176, 600 166"
-                  thin
-                  dashed="4 6"
-                  delay={1.6}
+              {/* Gravura e ondas andam juntas: as ondas saem do megafone e não podem se separar dele */}
+              <HermesFollow className="absolute inset-0">
+                {/* enter={false}: já visível no primeiro quadro, como a gravura estática da referência */}
+                <Engraving
+                  src="/v3/hermes.webp"
+                  mobileSrc="/v3/hermes-m.webp"
+                  alt={HERO.hermesAlt}
+                  width={600}
+                  height={740}
+                  priority
+                  enter={false}
+                  className="absolute inset-0 h-full w-full"
                 />
-                <Pen
-                  d="M560 636 C 610 610, 640 520, 640 440 M640 440 L 632 452 M640 440 L 648 452"
-                  delay={2.1}
-                />
-              </svg>
+                <svg
+                  className="pointer-events-none absolute inset-0 h-full w-full overflow-visible [transform:translate(-38px,-14px)]"
+                  viewBox="0 0 600 740"
+                  aria-hidden="true"
+                >
+                  {ONDAS.map((d, i) => (
+                    <Pen key={d} d={d} thin delay={Math.round((0.8 + i * 0.03) * 100) / 100} dur={0.5} />
+                  ))}
+                  <Pen
+                    d="M640 236 C 650 200, 620 176, 600 166"
+                    thin
+                    dashed="4 6"
+                    delay={1.6}
+                  />
+                  <Pen
+                    d="M560 636 C 610 610, 640 520, 640 440 M640 440 L 632 452 M640 440 L 648 452"
+                    delay={2.1}
+                  />
+                </svg>
+              </HermesFollow>
               <div
                 className="pop absolute top-[118px] left-[395px] z-[3] desk:left-[430px] rounded-[16px_16px_16px_4px] bg-brand px-4 py-3 text-[15px] whitespace-nowrap text-chalk"
                 style={settle(1.8)}

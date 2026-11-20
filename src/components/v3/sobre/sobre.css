@@ -1,0 +1,40 @@
+/* Hallmark · waive 10a-sobre · a foto sobe 20px e a lista entra da direita, uma vez por entrada, só com opacity e transform · é a entrada da página, não anima layout */
+
+/* =========================================================================
+   Entradas da página /sobre
+   -------------------------------------------------------------------------
+   Mesma regra de ouro do ink.css: o estado escondido só existe com JS ativo,
+   sem `?still` e com movimento permitido. Fora disso a foto e os itens são
+   conteúdo comum, já no estado final.
+   ========================================================================= */
+
+@keyframes sb-photo-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+@keyframes sb-item-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Retrato: sobe 20px em 1.1s, depois dos raios começarem */
+  .js:not(.still) [data-draw]:not([data-drawn]) .sb-photo {
+    opacity: 0;
+  }
+  .js:not(.still) [data-drawn] .sb-photo {
+    animation: sb-photo-in 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s both;
+  }
+
+  /* Itens da lista: entram da direita, o atraso de cada um vem de --d */
+  .js:not(.still) [data-draw]:not([data-drawn]) .sb-item {
+    opacity: 0;
+  }
+  .js:not(.still) [data-drawn] .sb-item {
+    animation: sb-item-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0s) both;
+  }
+}

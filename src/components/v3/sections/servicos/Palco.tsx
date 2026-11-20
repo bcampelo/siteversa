@@ -21,7 +21,8 @@ export function Palco({
   children: ReactNode;
 }) {
   return (
-    <DrawGroup replayOnHover className="min-w-0">
+    // Refaz sozinho a cada 7s enquanto o palco está na tela; o hover continua valendo
+    <DrawGroup replayOnHover replayEvery={7000} className="min-w-0">
       <div role="img" aria-label={label}>
         <ScaleBox
           w={PALCO_W}
