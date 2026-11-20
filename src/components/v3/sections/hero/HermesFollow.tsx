@@ -37,12 +37,25 @@ export function HermesFollow({
     const fine = window.matchMedia("(pointer: fine)").matches;
     if (still || reduced || !fine) return;
 
-    let x = 0;
-    let y = 0;
+    // O listener só guarda a posição; a medida do hero e a conta ficam no
+    // quadro, para o layout ser lido uma vez por quadro e não a cada evento
+    let px = 0;
+    let py = 0;
+    let inside = false;
     let frame = 0;
 
     const apply = () => {
       frame = 0;
+      let x = 0;
+      let y = 0;
+      if (inside) {
+        const r = host.getBoundingClientRect();
+        // dx e dy vão de -.5 (canto esquerdo/de cima) a .5 (direito/de baixo)
+        const dx = (px - r.left) / r.width - 0.5;
+        const dy = (py - r.top) / r.height - 0.5;
+        x = Math.round(dx * SHIFT_X * 10) / 10;
+        y = Math.round(dy * SHIFT_Y * 10) / 10;
+      }
       el.style.translate = `${x}px ${y}px`;
     };
     const schedule = () => {
@@ -50,17 +63,13 @@ export function HermesFollow({
     };
     const move = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
-      const r = host.getBoundingClientRect();
-      // dx e dy vão de -.5 (canto esquerdo/de cima) a .5 (direito/de baixo)
-      const dx = (e.clientX - r.left) / r.width - 0.5;
-      const dy = (e.clientY - r.top) / r.height - 0.5;
-      x = Math.round(dx * SHIFT_X * 10) / 10;
-      y = Math.round(dy * SHIFT_Y * 10) / 10;
+      px = e.clientX;
+      py = e.clientY;
+      inside = true;
       schedule();
     };
     const leave = () => {
-      x = 0;
-      y = 0;
+      inside = false;
       schedule();
     };
 

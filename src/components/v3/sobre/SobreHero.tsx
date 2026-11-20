@@ -33,7 +33,7 @@ export function SobreHero() {
       <div
         data-draw=""
         data-drawn=""
-        className="relative max-tab:flex max-tab:flex-col tab:min-h-[720px] desk:min-h-[860px]"
+        className="relative max-tab:flex max-tab:flex-col tab:min-h-[700px] desk:min-h-[860px]"
       >
         {/* Palco 560x760. Mobile: antes do texto, até 380px. Tablet: 440px. Desktop: 560px, passando um pouco do container */}
         <div
