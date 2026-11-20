@@ -31,6 +31,10 @@
   --color-brand-soft: #c9baff;
   --color-brand-hot: #8b5cf0;
 
+  /* ---- Breakpoints v3: tablet 761 a 1100, desktop 1101 em diante ------- */
+  --breakpoint-tab: 761px;
+  --breakpoint-desk: 1101px;
+
   /* ---- Movimento ------------------------------------------------------ */
   --ease-versa: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
@@ -43,6 +47,30 @@
   --animate-shimmer: shimmer 2.8s linear infinite;
   --animate-caret: caret 1.05s steps(1) infinite;
   --animate-drift: drift 20s var(--ease-in-out-soft) infinite;
+}
+
+/* =========================================================================
+   Tokens v3
+   -------------------------------------------------------------------------
+   `static` porque o ink.css lê estas variáveis por var() e o Tailwind só
+   emite o que encontra em uso nos arquivos que ele processa. Sem isto, o
+   token sumiria do :root e a tinta da caneta ficaria sem cor.
+   ========================================================================= */
+
+@theme static {
+  --color-accent: #a887f5;
+  --color-muted: #5d5670;
+  --color-line-dark: #221d30;
+  --color-line-light: #dcd6ea;
+  --color-case-navy: #142231;
+  --color-case-gold: #b08d57;
+  --color-case-green: #0f6b4f;
+  --color-case-yellow: #e9b62f;
+  --color-case-blue: #1f4fd1;
+
+  /* Source Serif só na peça do Sampaio, Caveat nas notas à mão */
+  --font-serif: var(--font-source-serif), Georgia, serif;
+  --font-hand: var(--font-caveat), cursive;
 }
 
 @keyframes marquee {
@@ -128,6 +156,8 @@
   html {
     -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
+    /* clip, nunca hidden: hidden cria contêiner de rolagem e quebra o sticky */
+    overflow-x: clip;
     /* Reserva o espaço da barra de rolagem para sempre. Sem isto, todo
        `overflow: hidden` (intro, menu mobile, modal de case) muda a largura
        da viewport e o layout dá um pulo — CLS de graça, do pior tipo. */
@@ -163,10 +193,10 @@
     color: #fff;
   }
 
+  /* Sem border-radius aqui: o foco não pode mudar a forma de um botão pílula */
   :focus-visible {
-    outline: 2px solid var(--color-brand-soft);
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
-    border-radius: 4px;
   }
 
   @supports selector(::-webkit-scrollbar) {
@@ -273,6 +303,17 @@
   /* pequena folga para itálicos e letter-spacing negativo não serem cortados */
   padding-inline-end: 0.03em;
   margin-inline-end: -0.03em;
+}
+
+/* Contêiner da v3: 1200px incluindo o respiro lateral (40px, 24px no mobile) */
+@utility wrap {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 40px;
+  @media (width < 761px) {
+    padding-inline: 24px;
+  }
 }
 
 @utility shell {
