@@ -29,8 +29,7 @@ export type WhatsAppSource =
   | "cta-final"
   | "sticky-mobile"
   | "diagnostico-quente"
-  | "obrigado"
-  | "sobre";
+  | "obrigado";
 
 const MESSAGES: Record<WhatsAppSource, string> = {
   header: "Olá! Vim pelo site da Versa e quero falar sobre um projeto.",
@@ -59,7 +58,6 @@ const MESSAGES: Record<WhatsAppSource, string> = {
     "Olá! Acabei de rodar o diagnóstico no site da Versa e quero falar sobre o resultado.",
   obrigado:
     "Olá! Preenchi o diagnóstico no site da Versa e queria adiantar a conversa.",
-  sobre: "Oi, Breno! Vim pela página Sobre do site.",
 };
 
 /** Link base, sem atribuição. Seguro para renderizar no servidor. */

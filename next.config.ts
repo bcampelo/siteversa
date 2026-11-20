@@ -32,6 +32,13 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
 
+  async redirects() {
+    return [
+      // O Sobre virou seção da home. 308 para que buscadores e links antigos passem a apontar para a âncora
+      { source: "/sobre", destination: "/#sobre", permanent: true },
+    ];
+  },
+
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

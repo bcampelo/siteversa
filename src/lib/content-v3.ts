@@ -340,11 +340,6 @@ export const FECHAMENTO = {
 /* ---------------------------------------------------------------- Sobre -- */
 
 export const SOBRE = {
-  meta: {
-    title: "Breno Campelo, fundador da Versa",
-    description:
-      "Breno Campelo, fundador da Versa. Desenvolvedor full stack e gestor de tráfego em Rio Branco, Acre.",
-  },
   quote: {
     latin: "nosce te ipsum",
     translation: "conhece a ti mesmo. Inscrição do templo de Delfos",
@@ -389,12 +384,6 @@ export const SOBRE = {
         text: "Sampaio & Gonçalves, TransLima Express, Drogaria Arasuper e Sabor Acreano.",
       },
     ],
-  },
-  closing: {
-    title: ["Agora você sabe", "quem vai responder."],
-    text: "Me chama no WhatsApp e conta o que você vende.",
-    cta: CTA_LABEL,
-    sign: "Breno",
   },
 } as const;
 

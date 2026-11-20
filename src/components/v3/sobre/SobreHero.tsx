@@ -50,7 +50,7 @@ export function SobreHero() {
                 n={72}
                 min={18}
                 max={116}
-                // Semente própria do /sobre: nenhum outro Burst do site usa 41
+                // Semente própria do Sobre: nenhum outro Burst do site usa 41
                 seed={41}
                 ring
                 opacity={0.45}

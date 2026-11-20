@@ -1,7 +1,7 @@
-/* Hallmark · entradas do /sobre: a foto sobe 20px e os itens entram da direita, só opacity e transform */
+/* Hallmark · entradas da seção Sobre: a foto sobe 20px e os itens entram da direita, só opacity e transform */
 
 /* =========================================================================
-   Entradas da página /sobre
+   Entradas da seção Sobre da home
    -------------------------------------------------------------------------
    Mesma regra de ouro do ink.css: o estado escondido só existe com JS ativo,
    sem `?still` e com movimento permitido. Fora disso a foto e os itens são
