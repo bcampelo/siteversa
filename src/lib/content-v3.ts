@@ -269,36 +269,6 @@ export const MAIS_PECAS = {
   },
 } as const;
 
-/* ------------------------------------------------------ Como funciona -- */
-
-export const COMO = {
-  title: {
-    before: "Você fala com ",
-    underlined: "quem faz",
-    after: " o trabalho.",
-  } satisfies UnderlinedTitle,
-  lede: "Sem atendente no meio e sem contrato de fidelidade.",
-  handAlt: "Mão de mármore segurando uma caneta-tinteiro",
-  steps: [
-    {
-      num: "01",
-      title: "Conversa",
-      text: "Você conta o que vende e para quem.",
-    },
-    {
-      num: "02",
-      title: "Proposta",
-      text: "Escopo e valor fechados, por escrito.",
-    },
-    {
-      num: "03",
-      title: "Execução",
-      text: "Entrega, medição e ajuste.",
-    },
-  ],
-  back: "relatório todo mês, e volta para a conversa",
-} as const;
-
 /* ------------------------------------------------ Roadmap (Como trabalhamos) -- */
 
 /** Seis etapas desenhadas pela rolagem. A cópia aguarda confirmação do Breno. */
@@ -362,8 +332,6 @@ export const FECHAMENTO = {
   /** A assinatura é link para /sobre: "Breno" e, embaixo, o convite. */
   sign: {
     name: "Breno",
-    /** @deprecated Substituído por `link`. A Prova remove o uso em Fechamento.tsx e esta chave some junto. */
-    role: "Fundador da Versa, Rio Branco",
     link: "Conheça quem faz o trabalho",
     href: "/sobre",
   },
