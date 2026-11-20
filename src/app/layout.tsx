@@ -12,7 +12,6 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { StickyCta } from "@/components/layout/StickyCta";
 import { MotionProvider } from "@/components/providers/MotionProvider";
-import { FAQ } from "@/lib/content";
 import { SITE } from "@/lib/site";
 
 /* -------------------------------------------------------------------------
@@ -65,13 +64,18 @@ const sourceSerif = Source_Serif_4({
   preload: false,
 });
 
+/** Título e descrição da referência da v3 (a home não tem FAQ nem tagline). */
+const TITLE = "Versa, Rio Branco";
+const DESCRIPTION =
+  "Versa, agência de social media, tráfego pago e sites em Rio Branco, Acre.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name} — ${SITE.tagline}`,
+    default: TITLE,
     template: `%s · ${SITE.name}`,
   },
-  description: SITE.description,
+  description: DESCRIPTION,
   keywords: [
     "agência de marketing digital",
     "tráfego pago",
@@ -95,13 +99,13 @@ export const metadata: Metadata = {
     locale: "pt_BR",
     url: SITE.url,
     siteName: SITE.name,
-    title: `${SITE.name} — ${SITE.tagline}`,
-    description: SITE.description,
+    title: TITLE,
+    description: DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE.name} — ${SITE.tagline}`,
-    description: SITE.description,
+    title: TITLE,
+    description: DESCRIPTION,
   },
   robots: {
     index: true,
@@ -160,23 +164,6 @@ const jsonLd = {
   },
 };
 
-/**
- * FAQPage.
- *
- * As seis perguntas já existiam no site e não estavam marcadas. Marcar é de
- * graça e habilita o resultado expandido na busca, que ocupa mais espaço na
- * tela do que o link comum do concorrente.
- */
-const faqLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQ.map((item) => ({
-    "@type": "Question",
-    name: item.q,
-    acceptedAnswer: { "@type": "Answer", text: item.a },
-  })),
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -207,10 +194,6 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
         />
 
         <MotionProvider>

@@ -11,7 +11,7 @@ const WHATSAPP_MESSAGE =
 
 export const SITE = {
   name: "Versa",
-  legalName: "Versa — Tecnologia, Design e Performance",
+  legalName: "Versa, Tecnologia, Design e Performance",
   /**
    * Vem de NEXT_PUBLIC_SITE_URL. Em desenvolvimento cai em localhost.
    * Alimenta SEO, canonical, sitemap, robots e Open Graph, então precisa
