@@ -47,6 +47,29 @@ function slot(offset: number): CSSProperties {
   } as CSSProperties;
 }
 
+/** Seta em SVG: o glifo de texto colado no rótulo é lido como seta decorativa. */
+function Arrow({ dir }: { dir: "left" | "right" }) {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {dir === "left" ? (
+        <path d="M15 9H3M8 4L3 9l5 5" />
+      ) : (
+        <path d="M3 9h12M10 4l5 5-5 5" />
+      )}
+    </svg>
+  );
+}
+
 /** Quem pediu movimento mínimo, ou `?still` para print, não recebe autoplay. */
 function wantsStill() {
   return (
@@ -79,6 +102,11 @@ export function Coverflow({
   const rootRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const drag = useRef({ down: false, startX: 0, moved: false });
+
+  // Com o autoplay rodando, anunciar a legenda a cada 3,6s só atrapalha.
+  // `visible` vem antes de wantsStill() porque ele só vira true no cliente,
+  // e wantsStill() lê window (no servidor ficaria diferente do cliente)
+  const playing = visible && !hover && !focused && !wantsStill();
 
   const step = useCallback(
     (delta: number) => setCur((c) => (c + delta + n) % n),
@@ -132,6 +160,8 @@ export function Coverflow({
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    // Alt+seta e Cmd+seta são "voltar" do navegador: não são do carrossel
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
     if (e.key === "ArrowRight") step(1);
     else if (e.key === "ArrowLeft") step(-1);
     else return;
@@ -151,9 +181,11 @@ export function Coverflow({
         // Toque emula mouseenter e deixaria o carrossel parado para sempre
         onPointerEnter={(e) => e.pointerType === "mouse" && setHover(true)}
         onPointerLeave={(e) => e.pointerType === "mouse" && setHover(false)}
-        // Só foco de teclado pausa: o clique do mouse já é coberto pelo hover
+        // Só foco de teclado pausa: o clique do mouse já é coberto pelo hover.
+        // Recalcula a cada foco, senão o foco de teclado anterior ficaria
+        // preso quando a pessoa clica num ponto com o mouse
         onFocus={(e) =>
-          (e.target as Element).matches(":focus-visible") && setFocused(true)
+          setFocused((e.target as Element).matches(":focus-visible"))
         }
         onBlur={(e) => {
           if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false);
@@ -175,7 +207,7 @@ export function Coverflow({
                 data-far={far}
                 tabIndex={offset === 0 ? 0 : -1}
                 aria-hidden={far}
-                aria-label={`${labels.item} ${i + 1} ${labels.of} ${n}: ${art.caption}`}
+                aria-label={`${labels.item} ${i + 1} ${labels.of} ${n}: ${art.alt}`}
                 onClick={() => {
                   if (drag.current.moved) return;
                   setCur(i);
@@ -201,7 +233,7 @@ export function Coverflow({
             aria-label={labels.prev}
             onClick={() => step(-1)}
           >
-            <span aria-hidden="true">&larr;</span>
+            <Arrow dir="left" />
           </button>
           <div className="cf-dots">
             {arts.map((art, i) => (
@@ -221,12 +253,12 @@ export function Coverflow({
             aria-label={labels.next}
             onClick={() => step(1)}
           >
-            <span aria-hidden="true">&rarr;</span>
+            <Arrow dir="right" />
           </button>
         </div>
       </div>
 
-      <p className="cf-caption" aria-live="polite">
+      <p className="cf-caption" aria-live={playing ? "off" : "polite"}>
         {arts[cur].caption}
       </p>
     </>
