@@ -253,6 +253,7 @@ export const RODAPE = {
   instagram: "Instagram",
   /** Rotas fora da home, que continuam acessíveis pelo rodapé. */
   more: [
+    { label: "Todos os serviços", href: "/servicos" },
     { label: "Diagnóstico gratuito", href: "/diagnostico" },
     { label: "Ferramentas", href: "/ferramentas" },
     { label: "Privacidade e dados", href: "/privacidade" },

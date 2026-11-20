@@ -1,69 +1,77 @@
 "use client";
 
-import { motion, useMotionValueEvent, useScroll } from "motion/react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { WhatsAppIcon } from "@/components/ui/Button";
-import { TrackedLink } from "@/components/ui/TrackedLink";
-import { track } from "@/lib/analytics";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/Button";
+import { CTA } from "@/lib/site";
 import { whatsappUrl } from "@/lib/whatsapp";
 
-/**
- * Barra fixa de ação no celular.
- *
- * O site tinha CTA no topo e no rodapé e nada no meio, o que significa que
- * durante a maior parte da rolagem não havia como agir. No celular, que é de
- * onde vem o tráfego social, esse é o padrão que mais converte.
- *
- * Aparece só depois do hero, para não competir com a primeira impressão, e
- * some nas páginas que já são, elas mesmas, uma conversão.
- */
+/** Rotas que já são, elas mesmas, uma conversão. */
 const OCULTA_EM = ["/diagnostico", "/obrigado"];
 
+/** Fora da home não há hero: a barra entra depois desta rolagem. */
+const SCROLL_FALLBACK = 700;
+
+/**
+ * Pílula fixa de WhatsApp no celular.
+ *
+ * Aparece depois que o hero (`#hero`) sai da tela e some quando o
+ * fechamento (`#fechamento`) entra, porque ali já existe o mesmo botão.
+ * Nas rotas sem hero usa a rolagem. Só até 760px: acima disso o cabeçalho
+ * já traz o botão.
+ */
 export function StickyCta() {
   const pathname = usePathname();
-  const [visivel, setVisivel] = useState(false);
-  const { scrollY } = useScroll();
+  const [heroVisible, setHeroVisible] = useState(true);
+  const [endVisible, setEndVisible] = useState(false);
 
-  useMotionValueEvent(scrollY, "change", (v) => {
-    setVisivel(v > 700);
-  });
+  useEffect(() => {
+    const hero = document.getElementById("hero");
+    const end = document.getElementById("fechamento");
+    const cleanups: Array<() => void> = [];
+
+    if (hero || end) {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.target === hero) setHeroVisible(e.isIntersecting);
+          else setEndVisible(e.isIntersecting);
+        }
+      });
+      if (hero) io.observe(hero);
+      if (end) io.observe(end);
+      cleanups.push(() => io.disconnect());
+    }
+
+    if (!hero) {
+      const onScroll = () => setHeroVisible(window.scrollY <= SCROLL_FALLBACK);
+      window.addEventListener("scroll", onScroll, { passive: true });
+      cleanups.push(() => window.removeEventListener("scroll", onScroll));
+    }
+
+    return () => cleanups.forEach((fn) => fn());
+  }, [pathname]);
 
   if (OCULTA_EM.includes(pathname)) return null;
 
+  const visible = !heroVisible && !endVisible;
+
   return (
-    <motion.div
-      aria-hidden={!visivel}
-      initial={false}
-      animate={{ y: visivel ? 0 : 100, opacity: visivel ? 1 : 0 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed inset-x-3 bottom-3 z-[60] flex gap-2 lg:hidden"
-      style={{ pointerEvents: visivel ? "auto" : "none" }}
+    <div
+      aria-hidden={!visible}
+      inert={!visible}
+      className={`fixed inset-x-6 bottom-[max(1rem,env(safe-area-inset-bottom))] z-[60] mx-auto flex max-w-[420px] [transition-property:translate,opacity] [transition-duration:.45s] [transition-timing-function:cubic-bezier(.2,.8,.2,1)] tab:hidden ${
+        visible ? "translate-y-0 opacity-100" : "translate-y-24 opacity-0"
+      }`}
     >
-      <Link
-        href="/diagnostico"
-        onClick={() =>
-          track("cta_click", {
-            section: "sticky-mobile",
-            label: "Diagnóstico grátis",
-          })
-        }
-        className="flex h-13 flex-1 items-center justify-center rounded-full bg-chalk px-5 text-[0.9375rem] font-medium text-ink shadow-[0_16px_40px_-16px_rgba(0,0,0,0.9)]"
-      >
-        Diagnóstico grátis
-      </Link>
-      <TrackedLink
+      <Button
         href={whatsappUrl("sticky-mobile")}
+        external
         section="sticky-mobile"
-        ctaLabel="WhatsApp"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Falar no WhatsApp"
-        className="grid h-13 w-13 shrink-0 place-items-center rounded-full border border-chalk/15 bg-ink-2/90 text-chalk backdrop-blur-xl"
+        ctaLabel={CTA.falar}
+        className="w-full shadow-[0_16px_40px_-16px_var(--color-ink)]"
       >
-        <WhatsAppIcon className="size-5" />
-      </TrackedLink>
-    </motion.div>
+        {CTA.falar}
+      </Button>
+    </div>
   );
 }
