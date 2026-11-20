@@ -17,7 +17,8 @@ const { bio } = SOBRE;
  */
 export function SobreBio() {
   return (
-    <section className="py-24 tab:py-36">
+    // Padding inferior 134px (não 144): fecha a distância até o título do fechamento como no print aprovado
+    <section className="py-24 tab:pt-36 tab:pb-[134px]">
       <DrawGroup className="wrap grid items-start gap-x-24 gap-y-14 desk:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
         <div className="min-w-0">
           <RevealTitle className="max-w-[14ch] font-display text-[40px] leading-none font-medium tracking-[-0.04em] text-balance [overflow-wrap:break-word] tab:text-[56px]">
@@ -39,7 +40,7 @@ export function SobreBio() {
             return (
               <li
                 key={item.num}
-                className="sb-item relative grid grid-cols-[56px_minmax(0,1fr)] gap-x-4 py-10 tab:grid-cols-[96px_minmax(0,1fr)]"
+                className="sb-item relative grid grid-cols-[56px_minmax(0,1fr)] gap-x-4 py-[39px] tab:grid-cols-[96px_minmax(0,1fr)]"
                 style={cssVars({ "--d": `${delay}s` })}
               >
                 <Hand delay={delay + 0.1} className="text-[34px]">
@@ -49,7 +50,7 @@ export function SobreBio() {
                   <h3 className="font-display text-[26px] leading-[1.1] font-medium tracking-[-0.04em] text-balance [overflow-wrap:break-word] tab:text-[30px]">
                     {item.title}
                   </h3>
-                  <p className="mt-3 max-w-[485px] text-[16px] leading-[1.55] text-fog">
+                  <p className="mt-[11px] max-w-[485px] text-[16px] leading-[1.55] text-fog">
                     {item.text}
                   </p>
                 </div>
