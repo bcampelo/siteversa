@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { preload } from "react-dom";
 import { cn } from "@/lib/utils";
 
 /**
@@ -33,6 +34,12 @@ export function Engraving({
    */
   enter?: boolean;
 }) {
+  // Com `unoptimized` o next/image não emite o preload do `priority`, e ele
+  // nunca põe fetchPriority sozinho. Sem os dois, o Hermes do hero (LCP) cai
+  // atrás do JS e das fontes na fila do navegador. preload() do react-dom
+  // funciona em componente de servidor e escreve o <link> no <head>.
+  if (priority) preload(src, { as: "image", fetchPriority: "high" });
+
   return (
     <Image
       src={src}
@@ -40,6 +47,7 @@ export function Engraving({
       width={width}
       height={height}
       priority={priority}
+      fetchPriority={priority ? "high" : undefined}
       unoptimized
       draggable={false}
       className={cn("eg", !enter && "eg-now", className)}
