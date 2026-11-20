@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useSyncExternalStore } from "react";
 import { VersaMark } from "@/components/brand/VersaMark";
 import { VersaWordmark } from "@/components/brand/VersaWordmark";
@@ -28,6 +29,7 @@ const scrolledOnServer = () => false;
  */
 export function Header() {
   const scrolled = useSyncExternalStore(subscribe, scrolledNow, scrolledOnServer);
+  const pathname = usePathname();
 
   return (
     <header
@@ -60,7 +62,9 @@ export function Header() {
               // O link Sobre é medido como header, como pede a spec (4.8)
               section={item.href === "/sobre" ? "header" : "header-nav"}
               ctaLabel={item.label}
-              className="text-[0.9375rem] text-fog [transition:color_.22s] hover:text-chalk max-tab:hidden"
+              // Só rotas inteiras podem estar ativas; as âncoras da home não
+              aria-current={item.href === pathname ? "page" : undefined}
+              className="text-[0.9375rem] text-fog [transition:color_.22s] hover:text-chalk aria-[current=page]:text-chalk max-tab:hidden"
             >
               {item.label}
             </TrackedLink>

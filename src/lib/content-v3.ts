@@ -51,8 +51,6 @@ export const SERVICOS = {
     underlined: "primeiro cliente.",
   } satisfies UnderlinedTitle,
   lede: "Toda peça começa como rascunho. Aqui ele vira peça pronta na sua frente.",
-  /** @deprecated Sai da home nesta rodada. O Topo remove o uso em Servicos.tsx e esta chave some junto. */
-  hoverHint: "Passe o mouse para ver de novo.",
   items: {
     social: {
       num: "01",
