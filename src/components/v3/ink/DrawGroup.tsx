@@ -20,12 +20,19 @@ export function DrawGroup({
   as = "div",
   className,
   replayOnHover = false,
+  replayEvery,
   children,
 }: {
   as?: "div" | "section" | "article" | "figure" | "span";
   className?: string;
   /** Refaz o desenho no mouseenter, no máximo a cada 3s. */
   replayOnHover?: boolean;
+  /**
+   * Refaz o desenho sozinho a cada `replayEvery` ms, enquanto metade do grupo
+   * está na tela e a aba está ativa. Divide o intervalo mínimo com o hover:
+   * um replay recente, de qualquer origem, adia o próximo.
+   */
+  replayEvery?: number;
   children: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -66,11 +73,39 @@ export function DrawGroup({
     };
     if (replayOnHover) el.addEventListener("mouseenter", replay);
 
+    // Replay automático. Um setTimeout encadeado em vez de setInterval: o
+    // próximo disparo conta a partir do último desenho, inclusive o do hover.
+    let timer = 0;
+    let half: IntersectionObserver | undefined;
+    if (replayEvery) {
+      let visible = false;
+      const schedule = () => {
+        window.clearTimeout(timer);
+        if (!visible) return;
+        const wait = drawnAt ? Math.max(drawnAt + replayEvery - Date.now(), 500) : replayEvery;
+        timer = window.setTimeout(tick, wait);
+      };
+      const tick = () => {
+        if (!document.hidden) replay();
+        schedule();
+      };
+      half = new IntersectionObserver(
+        (entries) => {
+          visible = entries[entries.length - 1].isIntersecting;
+          schedule();
+        },
+        { threshold: 0.5 },
+      );
+      half.observe(el);
+    }
+
     return () => {
       io.disconnect();
+      half?.disconnect();
+      window.clearTimeout(timer);
       el.removeEventListener("mouseenter", replay);
     };
-  }, [replayOnHover]);
+  }, [replayOnHover, replayEvery]);
 
   // `data-draw` fica no HTML do servidor: é o que o CSS usa para esconder a
   // gravura e os cards até o grupo ser desenhado.

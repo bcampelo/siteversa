@@ -6,4 +6,7 @@ export { Engraving } from "./Engraving";
 export { Hand } from "./Hand";
 export { Underline } from "./Underline";
 export { ScaleBox } from "./ScaleBox";
+export { RevealTitle } from "./RevealTitle";
+export { Parallax } from "./Parallax";
+export { InkTrail } from "./InkTrail";
 export { cssVars, sec } from "./vars";

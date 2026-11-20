@@ -36,7 +36,7 @@ export const HERO = {
     "Hermes de mármore falando num megafone, com as ondas de som desenhadas virando uma mensagem",
   hermesAlt: "Busto de mármore de Hermes falando num megafone",
   message: "Oi! Vi o anúncio de vocês.",
-  note: "a mensagem certa vira conversa",
+  note: "o anúncio certo vira cliente",
 } as const;
 
 /* ------------------------------------------------------------ Serviços -- */
@@ -50,8 +50,8 @@ export const SERVICOS = {
     before: "Do primeiro post ao ",
     underlined: "primeiro cliente.",
   } satisfies UnderlinedTitle,
-  lede: "Toda peça começa como rascunho.",
-  /** Só de 1101px para cima. No toque não existe hover. */
+  lede: "Toda peça começa como rascunho. Aqui ele vira peça pronta na sua frente.",
+  /** @deprecated Sai da home nesta rodada. O Topo remove o uso em Servicos.tsx e esta chave some junto. */
   hoverHint: "Passe o mouse para ver de novo.",
   items: {
     social: {
@@ -301,6 +301,52 @@ export const COMO = {
   back: "relatório todo mês, e volta para a conversa",
 } as const;
 
+/* ------------------------------------------------ Roadmap (Como trabalhamos) -- */
+
+/** Seis etapas desenhadas pela rolagem. A cópia aguarda confirmação do Breno. */
+export const ROADMAP = {
+  title: {
+    before: "Do primeiro oi ao ",
+    underlined: "relatório",
+    after: " do mês.",
+  } satisfies UnderlinedTitle,
+  lede: "Seis etapas. Role a página e acompanhe a caneta.",
+  handAlt: "Mão de mármore segurando uma caneta-tinteiro",
+  steps: [
+    {
+      num: "01",
+      title: "Conversa",
+      text: "Você conta o que vende e para quem, no WhatsApp.",
+    },
+    {
+      num: "02",
+      title: "Diagnóstico",
+      text: "Olho seu perfil, seus anúncios e a concorrência daqui.",
+    },
+    {
+      num: "03",
+      title: "Proposta",
+      text: "Escopo, prazo e valor por escrito. Sem fidelidade.",
+    },
+    {
+      num: "04",
+      title: "Rascunho",
+      text: "Estratégia e primeiras peças. Você aprova antes de ir ao ar.",
+    },
+    {
+      num: "05",
+      title: "No ar",
+      text: "Post publicado, campanha rodando, página online.",
+    },
+    {
+      num: "06",
+      title: "Medição",
+      text: "Relatório todo mês e ajuste do que não rendeu.",
+    },
+  ],
+  back: "e volta para a conversa",
+} as const;
+
 /* ---------------------------------------------------------- Fechamento -- */
 
 export const FECHAMENTO = {
@@ -315,7 +361,75 @@ export const FECHAMENTO = {
   cta: CTA_LABEL,
   /** O busto é decorativo: alt vazio. */
   bustAlt: "",
-  sign: { name: "Breno", role: "Fundador da Versa, Rio Branco" },
+  /** A assinatura é link para /sobre: "Breno" e, embaixo, o convite. */
+  sign: {
+    name: "Breno",
+    /** @deprecated Substituído por `link`. A Prova remove o uso em Fechamento.tsx e esta chave some junto. */
+    role: "Fundador da Versa, Rio Branco",
+    link: "Conheça quem faz o trabalho",
+    href: "/sobre",
+  },
+} as const;
+
+/* ---------------------------------------------------------------- Sobre -- */
+
+export const SOBRE = {
+  meta: {
+    title: "Breno Campelo, fundador da Versa",
+    description:
+      "Breno Campelo, fundador da Versa. Desenvolvedor full stack e gestor de tráfego em Rio Branco, Acre.",
+  },
+  quote: {
+    latin: "nosce te ipsum",
+    translation: "conhece a ti mesmo. Inscrição do templo de Delfos",
+  } satisfies HandQuote,
+  /** Duas linhas, com quebra entre elas. */
+  title: ["Breno", "Campelo"],
+  role: "Fundador da Versa, Rio Branco",
+  portraitAlt: "Breno Campelo",
+  /** Notas à mão no retrato. A segunda tem duas linhas. */
+  notes: {
+    who: "quem atende é quem faz",
+    both: ["código e campanha", "na mesma cabeça"],
+  },
+  bio: {
+    title: {
+      before: "Programo o site e cuido do ",
+      underlined: "anúncio",
+      after: " que leva gente até ele.",
+    } satisfies UnderlinedTitle,
+    text: "Por isso a Versa é pequena de propósito. A estratégia, a peça e o código passam pela mesma mesa.",
+    /** `num` é o algarismo romano escrito à mão. */
+    items: [
+      {
+        num: "i",
+        title: "Desenvolvedor full stack",
+        text: "Formado pelo Web Academy, programa de formação com a Motorola.",
+      },
+      {
+        num: "ii",
+        title: "Sistemas de Informação",
+        text: "Graduando na UFAC, em Rio Branco.",
+      },
+      {
+        num: "iii",
+        title: "Marketing e tráfego pago",
+        text: "Cerca de 4 anos na área, com diversos projetos já produzidos.",
+      },
+      {
+        num: "iv",
+        title: "Clientes daqui",
+        // A Sabor Acreano depende da confirmação do Breno (spec 2.3). Se ele disser não, sai daqui.
+        text: "Sampaio & Gonçalves, TransLima Express, Drogaria Arasuper e Sabor Acreano.",
+      },
+    ],
+  },
+  closing: {
+    title: ["Agora você sabe", "quem vai responder."],
+    text: "Me chama no WhatsApp e conta o que você vende.",
+    cta: CTA_LABEL,
+    sign: "Breno",
+  },
 } as const;
 
 /* -------------------------------------------------------------- Rodapé -- */
@@ -325,7 +439,8 @@ export const RODAPE = {
   links: [
     { label: "Serviços", href: "/#servicos" },
     { label: "Trabalhos", href: "/#trabalhos" },
-    { label: "Como funciona", href: "/#como" },
+    { label: "Como trabalhamos", href: "/#como" },
+    { label: "Sobre", href: "/sobre" },
   ],
   instagram: "Instagram",
   /** Rotas fora da home, que continuam acessíveis pelo rodapé. */

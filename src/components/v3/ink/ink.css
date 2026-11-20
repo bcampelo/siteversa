@@ -254,3 +254,27 @@
     animation-play-state: paused;
   }
 }
+
+/* ---- Título que se revela (RevealTitle) ---------------- */
+
+@keyframes reveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(24px);
+  }
+  to {
+    /* Margem negativa: o sublinhado de caneta passa da caixa do título */
+    clip-path: inset(-10% -5% -30% -5%);
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js:not(.still) [data-reveal]:not([data-in]) {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(24px);
+  }
+  .js:not(.still) [data-reveal][data-in] {
+    animation: reveal 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+}
