@@ -165,6 +165,16 @@ const GRAVURAS = [
     mascara: [60, 60, 55, 58, 60],
   },
   {
+    // Foto do Breno para /sobre. NÃO passa pelo efeito de gravura: é só recorte
+    // e recompressão. O recorte (px da fonte, 900x1600) tira o topo vazio e
+    // mantém tudo até o fim; a largura de saída é 2x os 460px de exibição.
+    nome: "breno",
+    foto: true,
+    fonte: async () => join(FONTES, "breno-recorte.png"),
+    recorte: { left: 0, top: 380, width: 900 },
+    largura: 920,
+  },
+  {
     nome: "busto-cta",
     fonte: () => achar(DOWNLOADS, /^Marble_bust_listening_gesture_b922e259_2K\.jpg$/),
     w: 560,
@@ -202,6 +212,25 @@ async function fonteAtlas() {
 }
 
 /* ------------------------------------------------------------------ cálculo */
+
+/**
+ * Foto sem gravura: recorta, redimensiona e grava em WebP. O alfa vai sem
+ * perda (alphaQuality 100): com qualidade baixa o degradê da máscara CSS,
+ * que apaga ombros e base, aparece em faixas.
+ */
+async function assarFoto(g, fonte) {
+  const meta = await sharp(fonte).metadata();
+  const { left, top, width } = g.recorte;
+  const destino = join(OUT, `${g.nome}.webp`);
+  const info = await sharp(fonte)
+    .extract({ left, top, width, height: meta.height - top })
+    .resize({ width: g.largura, kernel: "lanczos3" })
+    .webp({ quality: 82, alphaQuality: 100, effort: 6 })
+    .toFile(destino);
+  console.log(
+    `${g.nome}.webp  ${info.width}x${info.height}  ${(info.size / 1024).toFixed(0)} KB`,
+  );
+}
 
 const clamp01 = (n) => (n < 0 ? 0 : n > 1 ? 1 : n);
 
@@ -320,6 +349,10 @@ async function main() {
 
   for (const g of lista) {
     const fonte = await g.fonte();
+    if (g.foto) {
+      await assarFoto(g, fonte);
+      continue;
+    }
     const recorte = await recortar(fonte, g);
     const rgba = assar(g, recorte);
     const destino = join(OUT, `${g.nome}.webp`);
