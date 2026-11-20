@@ -1,0 +1,255 @@
+/* Hallmark · custom · versa-site-v3 · idea: "a peça pronta mostra o rascunho" · vibe: "estúdio escuro, caneta roxa, mármore" · posture: restrained, roxo é a tinta da caneta · axes: dark/grotesk/chromatic-violet · hero: título à esquerda, Hermes gravado à direita · job: conversar no WhatsApp */
+/* critique: o desenho é o processo da Versa mostrado, não enfeite; cada palco desenha o rascunho e entrega a peça; nenhum número inventado */
+/* Hallmark · waive 10a · stroke-dashoffset nas linhas da caneta, só em SVG, uma vez por entrada · é o próprio gesto de desenhar, não anima layout */
+/* Hallmark · waive 10a-sign · .write-in anima clip-path uma vez, 1.2s · a assinatura "Breno" se escreve da esquerda para a direita */
+/* Hallmark · waive 38iii · o círculo à mão em "ninguém" é a assinatura do hero · aparece uma vez na página */
+/* Hallmark · waive 23 · a tinta da caneta é o único acento da página · roxo como material, não como decoração */
+/* Hallmark · waive 37 · Source Serif só dentro da peça do cliente Sampaio · é a tipografia dele, não da Versa */
+/* Hallmark · waive 67 · o espaçamento do logotipo VERSA faz parte da marca · não é rótulo em caixa alta */
+
+/* =========================================================================
+   Tinta: primitivas de desenho da v3 (componentes em ./*.tsx)
+   -------------------------------------------------------------------------
+   Regra de ouro: o estado inicial escondido só existe com JS ativo (classe
+   `js` no <html>, posta por script antes da pintura), sem `?still` na URL e
+   com movimento permitido. Fora disso nada aqui esconde nada, então o estado
+   final é o estado de base e não precisa de regra de exceção.
+
+   Quem dispara é o <DrawGroup>: ele põe `data-drawn` quando o grupo entra na
+   tela. Os tempos vêm das variáveis `--d` (atraso) e `--dur` (duração).
+   ========================================================================= */
+
+/* ---- Base: aparência da tinta, valem sempre ----------------------------- */
+
+.hand {
+  font-family: var(--font-hand);
+  font-weight: 500;
+  color: var(--color-accent);
+  line-height: 1.05;
+  transform: rotate(var(--r, 0deg));
+}
+
+.ink {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ink.thin {
+  stroke-width: 1.2;
+}
+.ink.fog {
+  stroke: var(--color-fog);
+}
+.ink.brand {
+  stroke: var(--color-brand);
+}
+
+/* Linha tracejada: não dá para tracejar e revelar ao mesmo tempo com
+   stroke-dashoffset, então ela entra por opacidade (ver mais abaixo). */
+.pen.dashed {
+  stroke-dasharray: var(--dash, 4 6);
+}
+
+/* Rascunho: só existe enquanto desenha. No estado final a peça pronta ocupa
+   o lugar dele, então sem animação ele fica escondido de saída. */
+.sk {
+  opacity: 0;
+}
+
+/* Gravura já pronta (alfa assado no build). Só não captura o ponteiro. */
+.eg {
+  pointer-events: none;
+}
+
+/* Raios: linhas radiais geradas pelo <Burst> */
+.burst {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+}
+.burst path,
+.burst circle {
+  fill: none;
+  stroke: var(--color-fog);
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+.burst.ac path,
+.burst.ac circle {
+  stroke: var(--color-accent);
+}
+.burst.mu path,
+.burst.mu circle {
+  stroke: var(--color-muted);
+}
+
+/* Sublinhado de caneta no título */
+.u {
+  position: relative;
+  white-space: nowrap;
+}
+.u svg {
+  position: absolute;
+  left: -2%;
+  bottom: -0.14em;
+  width: 104%;
+  height: 0.32em;
+  overflow: visible;
+}
+.u path {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+/* No papel claro a tinta troca de accent para brand, que tem contraste */
+.paper .u path {
+  stroke: var(--color-brand);
+}
+
+/* ---- Animação ----------------------------------------------------------- */
+
+@keyframes pen {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes pop {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: rotate(var(--r, 0deg));
+  }
+}
+@keyframes fadeout {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes egin {
+  from {
+    opacity: 0;
+    transform: scale(1.03);
+  }
+}
+@keyframes adin {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.92);
+  }
+}
+@keyframes colup {
+  to {
+    transform: translateY(-50%);
+  }
+}
+@keyframes write {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* -- Linhas de caneta: pathLength="1", então o traço inteiro mede 1 ---- */
+  .js:not(.still) .pen {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .js:not(.still) [data-drawn] .pen {
+    animation: pen var(--dur, 0.9s) cubic-bezier(0.65, 0, 0.35, 1) var(--d, 0s)
+      forwards;
+  }
+  .js:not(.still) .pen.dashed {
+    stroke-dasharray: var(--dash, 4 6);
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  .js:not(.still) [data-drawn] .pen.dashed {
+    animation: rise var(--dur, 0.5s) cubic-bezier(0.2, 0.8, 0.2, 1)
+      var(--d, 0s) forwards;
+  }
+
+  /* -- Balão, nota à mão e peça pronta ------------------------------------ */
+  .js:not(.still) .pop {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  .js:not(.still) [data-drawn] .pop {
+    animation: pop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0s) forwards;
+  }
+
+  .js:not(.still) .note {
+    opacity: 0;
+    transform: translateY(6px) rotate(var(--r, 0deg));
+  }
+  .js:not(.still) [data-drawn] .note {
+    animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0s) forwards;
+  }
+
+  /* Sobe ao carregar, sem esperar o observer (título do hero é o LCP) */
+  .js:not(.still) .settle {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0s) forwards;
+  }
+
+  .js:not(.still) .final {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  .js:not(.still) [data-drawn] .final {
+    animation: rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 1.3s) forwards;
+  }
+
+  /* O rascunho aparece e some quando a peça pronta ocupa o lugar */
+  .js:not(.still) .sk {
+    opacity: 1;
+  }
+  .js:not(.still) [data-drawn] .sk {
+    animation: fadeout 0.5s ease-in var(--o, 1.5s) forwards;
+  }
+
+  /* -- Gravura entra depois dos raios ------------------------------------- */
+  .js:not(.still) [data-draw]:not([data-drawn]) .eg,
+  .js:not(.still) [data-draw]:not([data-drawn]) .adin {
+    opacity: 0;
+  }
+  .js:not(.still) [data-drawn] .eg {
+    animation: egin 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s both;
+  }
+  /* Cards abrem em leque; o atraso de cada um vem de --d */
+  .js:not(.still) [data-drawn] .adin {
+    animation: adin 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0.3s) both;
+  }
+
+  /* -- Assinatura se escreve ---------------------------------------------- */
+  .js:not(.still) [data-draw]:not([data-drawn]) .write-in {
+    clip-path: inset(0 100% 0 0);
+  }
+  .js:not(.still) [data-drawn] .write-in {
+    animation: write 1.2s steps(24, end) var(--d, 0.3s) both;
+  }
+
+  /* -- Colunas da Arasuper: laço contínuo de 30s -------------------------- */
+  html:not(.still) .loop-col {
+    animation: colup 30s linear infinite;
+  }
+  html:not(.still) .loop-col.rev {
+    animation-direction: reverse;
+  }
+  html:not(.still) .loop-host:hover .loop-col,
+  html:not(.still) .loop-host:focus-within .loop-col,
+  html:not(.still) .loop-host[data-paused="true"] .loop-col {
+    animation-play-state: paused;
+  }
+}

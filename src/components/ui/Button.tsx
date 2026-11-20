@@ -8,37 +8,31 @@ import { withCampaignTag } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 
 type Variant = "primary" | "ghost" | "quiet";
-type Size = "md" | "lg";
+type Size = "sm" | "md" | "lg";
 
+/*
+  Visual do Doop: pílula clara, sobe 1px no hover e afunda no clique.
+  Só propriedades que o Tailwind 4 escreve como `translate` e `scale` (e as
+  de cor), cada uma com a duração da referência. Nunca `transition: all`.
+*/
 const base =
-  "group/btn relative inline-flex items-center justify-center gap-2.5 overflow-hidden rounded-full font-medium tracking-tight transition-[transform,box-shadow,background-color,border-color] duration-500 ease-versa will-change-transform active:scale-[0.985]";
+  "group/btn relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-transparent font-sans font-medium [transition-property:translate,scale,background-color,border-color,color] [transition-duration:.12s,.12s,.22s,.22s,.22s] [transition-timing-function:cubic-bezier(.2,.8,.2,1)] hover:-translate-y-px active:translate-y-0 active:scale-[0.98]";
 
 const sizes: Record<Size, string> = {
-  md: "h-11 px-5 text-[0.9375rem]",
+  sm: "h-10 px-4 text-[0.875rem]",
+  md: "h-12 px-6 text-[0.9375rem]",
   lg: "h-[3.35rem] px-7 text-base",
 };
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-chalk text-ink shadow-[0_10px_40px_-12px_rgba(201,186,255,0.55)] hover:shadow-[0_16px_50px_-10px_rgba(139,92,240,0.65)]",
+  primary: "bg-chalk text-ink hover:bg-accent",
   ghost:
-    "border border-chalk/15 bg-chalk/[0.03] text-chalk backdrop-blur-md hover:border-brand-soft/45 hover:bg-chalk/[0.07]",
+    "border-chalk/15 bg-chalk/[0.03] text-chalk hover:border-accent/60 hover:bg-chalk/[0.07]",
   quiet: "text-fog hover:text-chalk",
 };
 
 function Inner({ children }: { children: ReactNode }) {
-  return (
-    <>
-      {/* brilho que atravessa o botão no hover */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-[900ms] ease-versa group-hover/btn:translate-x-full"
-      />
-      <span className="relative z-10 inline-flex items-center gap-2.5">
-        {children}
-      </span>
-    </>
-  );
+  return <>{children}</>;
 }
 
 /**
