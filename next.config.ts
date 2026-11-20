@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
 
+  // Fixa a raiz no diretório do projeto. Sem isso o Turbopack encontra o
+  // package-lock.json solto em ~ e infere a home como raiz do workspace.
+  turbopack: {
+    root: __dirname,
+  },
+
   images: {
     formats: ["image/avif", "image/webp"],
   },

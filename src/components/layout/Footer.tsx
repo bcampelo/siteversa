@@ -1,7 +1,7 @@
 import { VersaMark } from "@/components/brand/VersaMark";
 import { VersaWordmark } from "@/components/brand/VersaWordmark";
 import { TrackedLink } from "@/components/ui/TrackedLink";
-import { SERVICES } from "@/lib/content";
+import { SERVICOS_PAGINAS } from "@/lib/servicos";
 import { SITE } from "@/lib/site";
 import { whatsappUrl } from "@/lib/whatsapp";
 
@@ -35,13 +35,13 @@ export function Footer() {
           <nav aria-label="Serviços">
             <p className="text-eyebrow text-fog-dim">Serviços</p>
             <ul className="mt-5 flex flex-col gap-3">
-              {SERVICES.map((s) => (
-                <li key={s.id}>
+              {SERVICOS_PAGINAS.map((s) => (
+                <li key={s.slug}>
                   <a
-                    href="#servicos"
+                    href={`/servicos/${s.slug}`}
                     className="link-underline text-[0.875rem] text-fog transition-colors duration-300 hover:text-chalk"
                   >
-                    {s.name}
+                    {s.nome}
                   </a>
                 </li>
               ))}

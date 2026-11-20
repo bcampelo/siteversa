@@ -21,6 +21,8 @@ export type WhatsAppSource =
   | "servico-design"
   | "servico-trafego"
   | "servico-web"
+  | "servico-sistema"
+  | "servico-nfc"
   | "trabalhos"
   | "faq"
   | "footer"
@@ -41,6 +43,10 @@ const MESSAGES: Record<WhatsAppSource, string> = {
     "Olá! Vim pelo site da Versa. Quero falar sobre gestão de tráfego pago.",
   "servico-web":
     "Olá! Vim pelo site da Versa. Quero falar sobre site ou landing page.",
+  "servico-sistema":
+    "Olá! Vim pelo site da Versa. Quero conversar sobre um sistema para a minha empresa.",
+  "servico-nfc":
+    "Olá! Vim pelo site da Versa. Quero saber da placa NFC de avaliação no Google.",
   trabalhos:
     "Olá! Vim pelo site da Versa. Vi os trabalhos de vocês e quero um resultado parecido.",
   faq: "Olá! Vim pelo site da Versa. Fiquei com uma dúvida que não estava no FAQ.",
