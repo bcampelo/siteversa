@@ -19,6 +19,7 @@ export function Engraving({
   height,
   className,
   priority,
+  enter = true,
 }: {
   src: string;
   alt: string;
@@ -26,6 +27,11 @@ export function Engraving({
   height: number;
   className?: string;
   priority?: boolean;
+  /**
+   * Com `false` a gravura aparece na primeira pintura, sem `egin`. É o caso
+   * do Hermes do hero: candidato a LCP, não pode esperar hidratação.
+   */
+  enter?: boolean;
 }) {
   return (
     <Image
@@ -36,7 +42,7 @@ export function Engraving({
       priority={priority}
       unoptimized
       draggable={false}
-      className={cn("eg", className)}
+      className={cn("eg", !enter && "eg-now", className)}
     />
   );
 }

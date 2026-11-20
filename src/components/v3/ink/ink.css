@@ -220,11 +220,11 @@
   }
 
   /* -- Gravura entra depois dos raios ------------------------------------- */
-  .js:not(.still) [data-draw]:not([data-drawn]) .eg,
+  .js:not(.still) [data-draw]:not([data-drawn]) .eg:not(.eg-now),
   .js:not(.still) [data-draw]:not([data-drawn]) .adin {
     opacity: 0;
   }
-  .js:not(.still) [data-drawn] .eg {
+  .js:not(.still) [data-drawn] .eg:not(.eg-now) {
     animation: egin 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s both;
   }
   /* Cards abrem em leque; o atraso de cada um vem de --d */
@@ -241,15 +241,15 @@
   }
 
   /* -- Colunas da Arasuper: laço contínuo de 30s -------------------------- */
-  html:not(.still) .loop-col {
+  .js:not(.still) .loop-col {
     animation: colup 30s linear infinite;
   }
-  html:not(.still) .loop-col.rev {
+  .js:not(.still) .loop-col.rev {
     animation-direction: reverse;
   }
-  html:not(.still) .loop-host:hover .loop-col,
-  html:not(.still) .loop-host:focus-within .loop-col,
-  html:not(.still) .loop-host[data-paused="true"] .loop-col {
+  .js:not(.still) .loop-host:hover .loop-col,
+  .js:not(.still) .loop-host:focus-within .loop-col,
+  .js:not(.still) .loop-host[data-paused="true"] .loop-col {
     animation-play-state: paused;
   }
 }

@@ -22,19 +22,29 @@ const SCROLL_FALLBACK = 700;
  */
 export function StickyCta() {
   const pathname = usePathname();
-  const [heroVisible, setHeroVisible] = useState(true);
-  const [endVisible, setEndVisible] = useState(false);
+  // O estado leva a rota a que pertence. A navegação entre rotas não desmonta
+  // este componente, e sem isso o fechamento ou o hero da página anterior
+  // ficariam valendo na nova (a pílula nunca apareceria em /servicos).
+  const [seen, setSeen] = useState({ path: pathname, hero: true, end: false });
+  const atual = seen.path === pathname ? seen : { path: pathname, hero: true, end: false };
 
   useEffect(() => {
     const hero = document.getElementById("hero");
     const end = document.getElementById("fechamento");
     const cleanups: Array<() => void> = [];
+    const patch = (parte: { hero?: boolean; end?: boolean }) =>
+      setSeen((prev) => ({
+        ...(prev.path === pathname
+          ? prev
+          : { path: pathname, hero: true, end: false }),
+        ...parte,
+      }));
 
     if (hero || end) {
       const io = new IntersectionObserver((entries) => {
         for (const e of entries) {
-          if (e.target === hero) setHeroVisible(e.isIntersecting);
-          else setEndVisible(e.isIntersecting);
+          if (e.target === hero) patch({ hero: e.isIntersecting });
+          else patch({ end: e.isIntersecting });
         }
       });
       if (hero) io.observe(hero);
@@ -43,7 +53,8 @@ export function StickyCta() {
     }
 
     if (!hero) {
-      const onScroll = () => setHeroVisible(window.scrollY <= SCROLL_FALLBACK);
+      const onScroll = () => patch({ hero: window.scrollY <= SCROLL_FALLBACK });
+      onScroll();
       window.addEventListener("scroll", onScroll, { passive: true });
       cleanups.push(() => window.removeEventListener("scroll", onScroll));
     }
@@ -53,7 +64,7 @@ export function StickyCta() {
 
   if (OCULTA_EM.includes(pathname)) return null;
 
-  const visible = !heroVisible && !endVisible;
+  const visible = !atual.hero && !atual.end;
 
   return (
     <div
