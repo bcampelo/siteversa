@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import { Caveat, Source_Serif_4 } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import "@/components/v3/ink/ink.css";
 
 import { Analytics } from "@/components/analytics/Analytics";
 import { ConsentBanner } from "@/components/analytics/ConsentBanner";
@@ -8,25 +10,17 @@ import { ConsentDefaultScript } from "@/components/analytics/ConsentDefaultScrip
 import { WebVitals } from "@/components/analytics/WebVitals";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { Preloader } from "@/components/layout/Preloader";
-import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { StickyCta } from "@/components/layout/StickyCta";
 import { MotionProvider } from "@/components/providers/MotionProvider";
-import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { FAQ } from "@/lib/content";
 import { SITE } from "@/lib/site";
 
 /* -------------------------------------------------------------------------
-   Tipografia — 100% auto-hospedada (arquivos em src/fonts).
-   Nenhuma requisição a servidor de terceiros: menos latência, menos
-   dependência externa e nada de dados do visitante saindo do domínio.
-   As três primeiras são variáveis: um arquivo cobre toda a faixa de peso.
-
-   - Inter Tight: display. Grotesca tensa, a mesma linguagem das peças da
-     marca, com tracking negativo nos títulos grandes.
-   - Geist: texto corrido, excelente leitura em fundo escuro.
-   - Geist Mono: rótulos, índices e código — o "sotaque" tecnológico.
-   - Instrument Serif itálico: acento editorial, usado com parcimônia.
+   Tipografia.
+   Inter Tight (títulos), Geist e Geist Mono são locais, sem requisição a
+   terceiros. Caveat (notas à mão) e Source Serif 4 (só dentro da peça do
+   cliente Sampaio) vêm do next/font/google, que as baixa no build e as serve
+   do próprio domínio: o visitante também não fala com o Google.
    ------------------------------------------------------------------------- */
 const interTight = localFont({
   src: "../fonts/InterTight-Variable.woff2",
@@ -55,16 +49,20 @@ const geistMono = localFont({
   fallback: ["ui-monospace", "monospace"],
 });
 
-const instrumentSerif = localFont({
-  src: [
-    { path: "../fonts/InstrumentSerif-Regular.woff2", style: "normal" },
-    { path: "../fonts/InstrumentSerif-Italic.woff2", style: "italic" },
-  ],
-  variable: "--font-instrument-serif",
-  weight: "400",
+const caveat = Caveat({
+  subsets: ["latin"],
+  weight: "500",
+  variable: "--font-caveat",
   display: "swap",
   preload: false,
-  fallback: ["Georgia", "serif"],
+});
+
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-source-serif",
+  display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -186,29 +184,22 @@ export default function RootLayout({
     <html
       lang="pt-BR"
       data-scroll-behavior="smooth"
-      // O script inline abaixo grava `data-intro` no <html> antes da primeira
+      // O script inline abaixo grava `js` e `still` no <html> antes da primeira
       // pintura. O React precisa saber que essa diferença é intencional.
       suppressHydrationWarning
-      className={`${interTight.variable} ${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
+      className={`${interTight.variable} ${geistSans.variable} ${geistMono.variable} ${caveat.variable} ${sourceSerif.variable} antialiased`}
     >
       <head>
         <ConsentDefaultScript />
         {/*
-          Decide antes da primeira pintura se a intro de marca vai rodar, e
-          marca a decisão no <html>. O CSS do hero lê esse atributo para
-          sincronizar (ou zerar) o atraso da revelação, e o Preloader lê o
-          mesmo atributo para saber se deve se montar.
-
-          Regras: só na home, só em desktop (no celular a intro custaria o
-          que mais importa, velocidade), nunca em `prefers-reduced-motion`,
-          uma vez só por sessão e NUNCA em visita que chegou por link de
-          campanha. Visita paga não paga intro: quem clicou num anúncio veio
-          buscar uma resposta, e cada décimo de segundo antes dela é verba
-          queimada. A duração caiu de 2,15s para 1,15s pelo mesmo motivo.
+          Marca `js` no <html> antes da primeira pintura. É o `js` que liga o
+          estado inicial escondido das animações de tinta (ink.css): sem
+          script, tudo aparece pronto. `?still` pede o estado final sem
+          animação, o mesmo que prefers-reduced-motion, e serve para print.
         */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var d=document.documentElement;if(location.pathname!=="/")return;if(!window.matchMedia("(min-width:1024px)").matches)return;if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;var q=location.search;if(/utm_|gclid|fbclid/.test(q))return;if(sessionStorage.getItem("versa:intro")==="1")return;sessionStorage.setItem("versa:intro","1");d.setAttribute("data-intro","1");setTimeout(function(){d.setAttribute("data-intro-done","")},1150)}catch(e){}})();`,
+            __html: `(function(){var c=document.documentElement.classList;c.add("js");if(location.search.indexOf("still")>-1)c.add("still")})();`,
           }}
         />
       </head>
@@ -223,10 +214,6 @@ export default function RootLayout({
         />
 
         <MotionProvider>
-          <SmoothScroll />
-          <ScrollProgress />
-          <Preloader />
-
           <a
             href="#conteudo"
             className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-chalk focus:px-5 focus:py-3 focus:text-sm focus:font-medium focus:text-ink"
@@ -243,8 +230,6 @@ export default function RootLayout({
         <Analytics />
         <WebVitals />
         <ConsentBanner />
-
-        <div className="grain" aria-hidden />
       </body>
     </html>
   );
