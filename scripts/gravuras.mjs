@@ -32,6 +32,9 @@ import sharp from "sharp";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "public", "v3");
+// O ImageResponse (Satori) não lê WebP, então o OG usa uma versão em JPEG fora de public/v3
+const OG_HERMES = join(ROOT, "src", "components", "v3", "og", "hermes-og.jpg");
+const INK = { r: 8, g: 7, b: 13 };
 const DOWNLOADS = join(homedir(), "Downloads");
 const FONTES = join(homedir(), "Projetos/Versa/03-Site/site-v3/fontes");
 const ATLAS_DOOP = "https://doop.design/a/bk6CelDTDV.webp";
@@ -42,7 +45,19 @@ const COR = {
   brandSoft: [201, 186, 255],
   accent: [168, 135, 245],
   brand: [119, 81, 187],
+  ink: [8, 7, 13],
 };
+
+/** Luminância 0 a 1 (pesos do grayscale do CSS). */
+const luma = ([r, g, b]) => (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+/**
+ * As listras da referência vão de chalk a ink, não de branco a preto. Com 0 e 1
+ * a gravura sai com o preto mais fechado e o claro mais gasto que no png
+ * aprovado. Medido contra o png (erro médio sobre o recorte, com desfoque):
+ * Hermes do hero 4.4 com 0 e 1, 2.3 com chalk e ink; post 13.7 e 10.8.
+ */
+const LISTRA_ESCURA = luma(COR.ink);
+const LISTRA_CLARA = luma(COR.chalk);
 
 /** Degradê de 165 graus. O hero passa por brand-soft; as outras gravuras não. */
 const GRAD_HERO = [
@@ -82,7 +97,11 @@ const GRAVURAS = [
     fonte: () => achar(DOWNLOADS, /^Hermes_statue_shouting.*_a6f4974b_2K\.jpg$/),
     w: 224,
     h: 164,
-    // background-size 150% e position 62% 24%: a fonte entra com 1.5x a largura da caixa
+    // background-size 150% e position 62% 24%: a fonte entra com 1.5x a largura da caixa.
+    // Calibrado contra o png aprovado: busca em grade (zoom 1.0 a 1.8, foco x e y)
+    // do recorte 224x164 contra o post da referência. O mínimo é exatamente zoom 1.5,
+    // foco 62% 24% (erro 13.7; zoom 1.4 e 1.6 passam de 35). O que parecia
+    // "enquadramento mais fechado" era o piso das listras, corrigido acima.
     foco: [0.62, 0.24],
     zoom: 1.5,
     variante: "branca",
@@ -241,7 +260,7 @@ function assar(g, { data, canais, W, H }) {
       // onda triangular: 1 na linha de giz, 0 no meio da linha de tinta
       const pos = (x + 0.5 - W / 2) * ldx + (y + 0.5 - H / 2) * ldy + lcomp / 2;
       const fase = (((pos % periodo) + periodo) % periodo) / periodo;
-      const s = Math.abs(1 - 2 * fase);
+      const s = LISTRA_ESCURA + (LISTRA_CLARA - LISTRA_ESCURA) * Math.abs(1 - 2 * fase);
 
       const m = 0.5 * v + 0.5 * s;
       const t = clamp01((m - 0.5) * K + 0.5);
@@ -296,6 +315,18 @@ async function main() {
     console.log(
       `${g.nome}.webp  ${recorte.W}x${recorte.H}  ${(info.size / 1024).toFixed(0)} KB`,
     );
+
+    if (g.nome === "hermes") {
+      // 510x630 é o que a imagem de compartilhamento mostra (1200x630, Hermes à direita)
+      const og = await sharp(rgba, {
+        raw: { width: recorte.W, height: recorte.H, channels: 4 },
+      })
+        .resize(510, 630, { fit: "cover", position: "centre" })
+        .flatten({ background: INK })
+        .jpeg({ quality: 88 })
+        .toFile(OG_HERMES);
+      console.log(`hermes-og.jpg  510x630  ${(og.size / 1024).toFixed(0)} KB`);
+    }
   }
 }
 

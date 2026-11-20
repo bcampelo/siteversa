@@ -17,10 +17,11 @@ const ACCENT = "#a887f5";
 
 export async function renderShareImage() {
   const [hermes, fonte] = await Promise.all([
-    readFile(join(process.cwd(), "public/v3/hermes.webp")),
-    // Satori lê TTF, OTF e WOFF, mas não WOFF2. Por isso o Inter Tight em
-    // WOFF, ao lado dos arquivos do site em src/fonts.
-    readFile(join(process.cwd(), "src/fonts/InterTight-Bold.woff")),
+    // JPEG gerado por scripts/gravuras.mjs: o Satori não lê WebP
+    readFile(join(process.cwd(), "src/components/v3/og/hermes-og.jpg")),
+    // Satori lê TTF, OTF e WOFF, mas não WOFF2. Por isso o Inter Tight 500
+    // (o peso dos títulos da referência) em WOFF, ao lado dos arquivos do site em src/fonts.
+    readFile(join(process.cwd(), "src/fonts/InterTight-Medium.woff")),
   ]);
 
   const { before, circled, after } = HERO.lastLine;
@@ -41,7 +42,7 @@ export async function renderShareImage() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse não usa next/image */}
         <img
-          src={`data:image/webp;base64,${hermes.toString("base64")}`}
+          src={`data:image/jpeg;base64,${hermes.toString("base64")}`}
           width={510}
           height={630}
           alt=""
@@ -54,17 +55,18 @@ export async function renderShareImage() {
             paddingLeft: 80,
             maxWidth: 700,
             fontSize: 76,
-            fontWeight: 700,
+            fontWeight: 500,
             lineHeight: 1,
             letterSpacing: -3,
           }}
         >
           <span>{HERO.lines[0]}</span>
           <span>{HERO.lines[1]}</span>
-          <span>
-            {before}
+          {/* pre: o Satori descarta o espaço nas pontas de cada trecho */}
+          <span style={{ display: "flex", whiteSpace: "pre" }}>
+            <span>{before}</span>
             <span style={{ color: ACCENT }}>{circled}</span>
-            {after}
+            <span>{after}</span>
           </span>
         </div>
       </div>
@@ -72,7 +74,7 @@ export async function renderShareImage() {
     {
       width: 1200,
       height: 630,
-      fonts: [{ name: "Inter Tight", data: fonte, weight: 700, style: "normal" }],
+      fonts: [{ name: "Inter Tight", data: fonte, weight: 500, style: "normal" }],
     },
   );
 }
