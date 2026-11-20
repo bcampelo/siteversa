@@ -116,9 +116,9 @@ Mais difícil de escrever, muito mais difícil de contestar.
 ## 3.1 Site v3: decisões da rodada 2
 
 - Navegação: Serviços, Trabalhos, Como trabalhamos, Sobre e o botão. O rodapé repete as rotas e traz o Instagram.
-- Rota `/sobre`: a foto do Breno é natural, recortada, sem gravura; o estilo da marca entra só nos traços em volta.
+- Sobre: seção da home (`#sobre`, antes do Fechamento); `/sobre` redireciona para `/#sobre`. A foto do Breno é natural, recortada, sem gravura; o estilo da marca entra só nos traços em volta.
 - "Como funciona" virou o roadmap "Como trabalhamos", com seis etapas desenhadas pela rolagem.
-- Cada ideia aparece uma vez no site: "quem atende é quem faz" só no `/sobre`, "quem responde a mensagem é quem vai fazer o trabalho" só no fechamento da home.
+- Cada ideia aparece uma vez no site: "quem atende é quem faz" só na seção Sobre, "quem responde a mensagem é quem vai fazer o trabalho" só no fechamento da home.
 - Animação em CSS disparada por IntersectionObserver; rolagem e ponteiro em `requestAnimationFrame`, com listener passivo e só `transform`, `translate`, `opacity`, `stroke-dashoffset` e `clip-path`. Nenhuma biblioteca de animação.
 - Rastro de tinta e Hermes seguindo o mouse só montam com `(pointer: fine)`. Com `prefers-reduced-motion` e `?still`, tudo aparece no estado final.
 - Link da assinatura do fechamento usa o evento `cta_click`, porque `about_open` não existe em `VersaEvent`.

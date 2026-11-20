@@ -35,10 +35,10 @@ const after = (delay: number) => cssVars({ "--d": `${delay}s` });
 export function SobreHero() {
   return (
     <section className="relative overflow-clip pt-24 tab:pt-28 desk:pt-36">
-      <DrawGroup className="wrap relative max-tab:flex max-tab:flex-col tab:grid tab:grid-cols-[minmax(0,1fr)_440px] tab:items-center desk:grid-cols-[minmax(0,1fr)_560px]">
-        {/* Palco 560x760, no fluxo. Mobile: antes do texto, até 380px. Tablet: 440px. Desktop: 560px, passando do container (100px em telas largas, até a borda da tela nas estreitas) */}
+      <DrawGroup className="wrap relative max-tab:flex max-tab:flex-col tab:grid tab:grid-cols-[minmax(0,1fr)_410px] tab:items-center desk:grid-cols-[minmax(0,1fr)_560px]">
+        {/* Palco 560x760, no fluxo. No tablet a trilha tem 410px e o palco 440px, empurrado 30px para fora do container (o `w` fixo evita que a margem negativa estique a célula e o ScaleBox). Mobile: antes do texto, até 380px. Tablet: 440px. Desktop: 560px, passando do container (100px em telas largas, até a borda da tela nas estreitas) */}
         <div
-          className="max-tab:order-first max-tab:mx-auto max-tab:w-[min(380px,100%)] tab:col-start-2 tab:row-start-1 tab:-mr-[30px] desk:mr-[calc(-1*min(100px,40px_+_max(0px,(100vw-1200px)/2)))]"
+          className="max-tab:order-first max-tab:mx-auto max-tab:w-[min(380px,100%)] tab:col-start-2 tab:row-start-1 tab:w-[440px] tab:justify-self-end tab:-mr-[30px] desk:w-[560px] desk:mr-[calc(-1*min(100px,40px_+_max(0px,(100vw-1200px)/2)))]"
         >
           <ScaleBox w={PALCO_W} h={PALCO_H} className="overflow-visible!">
             <div className="relative" style={{ width: PALCO_W, height: PALCO_H }}>
@@ -127,8 +127,8 @@ export function SobreHero() {
           <p className="mt-1 text-[14px] text-fog">{SOBRE.quote.translation}</p>
 
           <RevealTitle className="mt-6 font-display text-[64px] leading-[0.92] font-medium tracking-[-0.05em] [overflow-wrap:break-word] tab:text-[88px] desk:text-[112px]">
-            <span className="block">{SOBRE.title[0]}</span>
-            <span className="block">{SOBRE.title[1]}</span>
+            <span className="block tab:whitespace-nowrap">{SOBRE.title[0]}</span>
+            <span className="block tab:whitespace-nowrap">{SOBRE.title[1]}</span>
           </RevealTitle>
 
           <p className="final mt-6 text-[22px] text-fog" style={after(0.3)}>
