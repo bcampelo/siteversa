@@ -21,6 +21,7 @@ export function Engraving({
   className,
   priority,
   enter = true,
+  mobileSrc,
 }: {
   src: string;
   alt: string;
@@ -33,14 +34,37 @@ export function Engraving({
    * do Hermes do hero: candidato a LCP, não pode esperar hidratação.
    */
   enter?: boolean;
+  /**
+   * Variante menor para telas de até 760px (ex.: "/v3/hermes-m.webp"). Com
+   * ela o componente renderiza um <picture>; o `src` continua sendo o
+   * <img>, com width, height, alt, fetchPriority e classes de sempre.
+   */
+  mobileSrc?: string;
 }) {
   // Com `unoptimized` o next/image não emite o preload do `priority`, e ele
   // nunca põe fetchPriority sozinho. Sem os dois, o Hermes do hero (LCP) cai
   // atrás do JS e das fontes na fila do navegador. preload() do react-dom
-  // funciona em componente de servidor e escreve o <link> no <head>.
-  if (priority) preload(src, { as: "image", fetchPriority: "high" });
+  // funciona em componente de servidor e escreve o <link> no <head>. Com
+  // variante de celular cada preload leva a sua mídia, senão o celular
+  // baixaria as duas.
+  if (priority) {
+    if (mobileSrc) {
+      preload(mobileSrc, {
+        as: "image",
+        fetchPriority: "high",
+        media: "(max-width: 760px)",
+      });
+      preload(src, {
+        as: "image",
+        fetchPriority: "high",
+        media: "(min-width: 761px)",
+      });
+    } else {
+      preload(src, { as: "image", fetchPriority: "high" });
+    }
+  }
 
-  return (
+  const img = (
     <Image
       src={src}
       alt={alt}
@@ -52,5 +76,15 @@ export function Engraving({
       draggable={false}
       className={cn("eg", !enter && "eg-now", className)}
     />
+  );
+
+  if (!mobileSrc) return img;
+
+  // `contents`: o <picture> não vira caixa, o <img> posiciona como antes
+  return (
+    <picture className="contents">
+      <source media="(max-width: 760px)" srcSet={mobileSrc} />
+      {img}
+    </picture>
   );
 }

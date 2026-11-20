@@ -70,7 +70,7 @@ const GRAD_PADRAO = [
   [0.9, COR.accent],
 ];
 
-/** Escala do arquivo em relação ao tamanho de exibição. */
+/** Escala padrão do arquivo em relação ao tamanho de exibição. */
 const ESCALA = 2;
 const ANGULO_LISTRA = -14; // graus, como o repeating-linear-gradient(-14deg)
 const ANGULO_COR = 165;
@@ -90,6 +90,21 @@ const GRAVURAS = [
     gradiente: GRAD_HERO,
     mascara: [64, 66, 56, 44, 62],
     // O hero da referência usa brightness 1.06; as outras, 1.05
+    brilho: 1.06,
+  },
+  {
+    // Variante de celular do Hermes: o hero é o LCP e, no celular, aparece com
+    // no máximo 420px. 1.2x cobre isso a DPR 1.7 por uma fração do peso (a
+    // conta é a mesma, só a escala muda). Servida por <picture> até 760px.
+    nome: "hermes-m",
+    fonte: () => achar(DOWNLOADS, /^Hermes_statue_shouting.*_a6f4974b_2K\.jpg$/),
+    w: 600,
+    h: 740,
+    escala: 1.2,
+    foco: [0.5, 0.35],
+    variante: "escura",
+    gradiente: GRAD_HERO,
+    mascara: [64, 66, 56, 44, 62],
     brilho: 1.06,
   },
   {
@@ -214,8 +229,9 @@ function corNoGradiente(stops, p) {
 
 /** Recorte como object-fit: cover (ou com zoom), já na escala do arquivo. */
 async function recortar(fonte, g) {
-  const W = g.w * ESCALA;
-  const H = g.h * ESCALA;
+  const esc = g.escala ?? ESCALA;
+  const W = Math.round(g.w * esc);
+  const H = Math.round(g.h * esc);
   const meta = await sharp(fonte).metadata();
   const escala = g.zoom ? (W * g.zoom) / meta.width : Math.max(W / meta.width, H / meta.height);
   const sw = Math.round(meta.width * escala);
@@ -237,7 +253,7 @@ async function recortar(fonte, g) {
 function assar(g, { data, canais, W, H }) {
   const K = g.contraste ?? 14;
   const brilho = g.brilho ?? 1.05;
-  const periodo = (g.periodo ?? 5) * ESCALA;
+  const periodo = (g.periodo ?? 5) * (g.escala ?? ESCALA);
   const ang = (ANGULO_LISTRA * Math.PI) / 180;
   const ldx = Math.sin(ang);
   const ldy = -Math.cos(ang);
