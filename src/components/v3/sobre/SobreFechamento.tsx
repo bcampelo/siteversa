@@ -9,7 +9,7 @@ const { closing } = SOBRE;
 export function SobreFechamento() {
   return (
     // Padding superior 135px (não 144), pelo mesmo motivo do SobreBio
-    <section className="overflow-clip py-24 tab:pt-[135px] tab:pb-36">
+    <section id="fechamento" className="overflow-clip py-24 tab:pt-[135px] tab:pb-36">
       <DrawGroup className="wrap flex flex-col items-center text-center">
         <RevealTitle className="font-display text-[min(48px,calc((100vw-48px)/7))] leading-[0.94] font-medium tracking-[-0.05em] text-balance [overflow-wrap:break-word] tab:text-[80px] desk:text-[104px]">
           {closing.title[0]}

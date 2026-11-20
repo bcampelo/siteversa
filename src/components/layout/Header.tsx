@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { VersaMark } from "@/components/brand/VersaMark";
 import { VersaWordmark } from "@/components/brand/VersaWordmark";
 import { Button } from "@/components/ui/Button";
@@ -30,6 +30,31 @@ const scrolledOnServer = () => false;
 export function Header() {
   const scrolled = useSyncExternalStore(subscribe, scrolledNow, scrolledOnServer);
   const pathname = usePathname();
+  // Um botão de WhatsApp por vez: o do cabeçalho some enquanto o hero ou o
+  // fechamento (que têm o seu) estão na tela. Sem esses ids, fica sempre.
+  const [cobertas, setCobertas] = useState<{ path: string; ids: string[] }>({
+    path: pathname,
+    ids: [],
+  });
+  useEffect(() => {
+    const alvos = ["hero", "fechamento"]
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (alvos.length === 0) return;
+    const io = new IntersectionObserver((entries) => {
+      setCobertas((prev) => {
+        const ids = new Set(prev.path === pathname ? prev.ids : []);
+        for (const e of entries) {
+          if (e.isIntersecting) ids.add(e.target.id);
+          else ids.delete(e.target.id);
+        }
+        return { path: pathname, ids: [...ids] };
+      });
+    });
+    alvos.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [pathname]);
+  const cta = cobertas.path === pathname && cobertas.ids.length > 0 ? "oculto" : "visivel";
 
   return (
     <header
@@ -69,15 +94,23 @@ export function Header() {
               {item.label}
             </TrackedLink>
           ))}
-          <Button
-            href={whatsappUrl("header")}
-            external
-            size="sm"
-            section="header"
-            ctaLabel={CTA.falar}
+          <div
+            inert={cta === "oculto"}
+            aria-hidden={cta === "oculto"}
+            className={`[transition-property:opacity] [transition-duration:.22s] ${
+              cta === "oculto" ? "pointer-events-none opacity-0" : "opacity-100"
+            }`}
           >
-            {CTA.falar}
-          </Button>
+            <Button
+              href={whatsappUrl("header")}
+              external
+              size="sm"
+              section="header"
+              ctaLabel={CTA.falar}
+            >
+              {CTA.falar}
+            </Button>
+          </div>
         </nav>
       </div>
     </header>

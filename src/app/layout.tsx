@@ -10,7 +10,6 @@ import { ConsentDefaultScript } from "@/components/analytics/ConsentDefaultScrip
 import { WebVitals } from "@/components/analytics/WebVitals";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { StickyCta } from "@/components/layout/StickyCta";
 import { MotionProvider } from "@/components/providers/MotionProvider";
 import { SITE } from "@/lib/site";
 
@@ -207,7 +206,6 @@ export default function RootLayout({
           <Header />
           <main id="conteudo">{children}</main>
           <Footer />
-          <StickyCta />
         </MotionProvider>
 
         <Analytics />
