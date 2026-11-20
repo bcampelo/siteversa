@@ -52,7 +52,8 @@ export function Fechamento() {
           {FECHAMENTO.title[1]}
         </RevealTitle>
 
-        <p className="relative mt-8 mb-6 text-[17px] leading-[1.55] text-pretty text-fog tab:mt-10">
+        {/* 366px quebra depois de "fazer" em 2 linhas, como na referência (a 1ª linha mede ~360px) */}
+        <p className="relative mt-8 mb-6 max-w-[366px] text-[17px] leading-[1.55] text-pretty text-fog tab:mt-10">
           {FECHAMENTO.text}
         </p>
 
@@ -78,11 +79,12 @@ export function Fechamento() {
           section="cta-final"
           event="cta_click"
           ctaLabel={FECHAMENTO.sign.link}
-          className="group relative mt-8 block -rotate-4 rounded-xl p-2"
+          className="group relative mt-8 block -rotate-4 rounded-xl p-2 pb-1"
         >
           <span className="write-in block font-hand text-[64px] leading-none text-accent">
             {FECHAMENTO.sign.name}
-            <small className="mt-2 block font-sans text-[14px] text-fog group-hover:text-chalk">
+            {/* pb-1 dá folga ao sublinhado: o clip-path do .write-in cortaria o que passasse da caixa; o pb-1 do link devolve os 4px */}
+            <small className="mt-2 block pb-1 font-sans text-[14px] text-fog underline decoration-accent decoration-1 underline-offset-4 group-hover:text-chalk">
               {FECHAMENTO.sign.link}
             </small>
           </span>
